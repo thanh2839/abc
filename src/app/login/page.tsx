@@ -9,25 +9,28 @@ const Page = () => {
   const [isRegister, setIsRegister] = useState(false); // Quản lý trạng thái hiển thị form
   const [passwordError, setPasswordError] = useState('');
 // Handle Login
-  const handleLogin = async (email: string, password: string, rememberMe: boolean) => {
+  const handleLogin = async (username: string, password: string, rememberMe: boolean) => {
     // alert(`Email: ${email}\nPassword: ${password}\nRemember Me: ${rememberMe}`);
+    const body = {
+      username: username,
+      password: password,
+    }    
     try {
       const response = await fetch (ApiRoutes.login, {
         method: 'POST',
+        // mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          "username": email,
-          "password": password,
-        })
+        body: JSON.stringify(body),
       })
       if (response.ok) {
         const data = await response.json();
-        const { accessToken } = data.token;
-        console.log('Access Token:', accessToken);
+        console.log(data.data.accessToken);
+        // const { accessToken } = data.token;
+        // console.log('Access Token:', accessToken);
 
-        sessionStorage.setItem('accessToken', accessToken);
+        // sessionStorage.setItem('accessToken', accessToken);
 
         //remember me
         if(rememberMe) {
@@ -108,3 +111,25 @@ const Page = () => {
 };
 
 export default Page;
+
+// import { signup } from '@/app/actions/auth'
+ 
+// export function SignupForm() {
+//   return (
+//     <form action={signup}>
+//       <div>
+//         <label htmlFor="name">Name</label>
+//         <input id="name" name="name" placeholder="Name" />
+//       </div>
+//       <div>
+//         <label htmlFor="email">Email</label>
+//         <input id="email" name="email" type="email" placeholder="Email" />
+//       </div>
+//       <div>
+//         <label htmlFor="password">Password</label>
+//         <input id="password" name="password" type="password" />
+//       </div>
+//       <button type="submit">Sign Up</button>
+//     </form>
+//   )
+// }

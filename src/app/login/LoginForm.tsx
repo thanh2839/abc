@@ -3,28 +3,29 @@ import { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 interface LoginFormProps {
-  onSubmit: (email: string, password: string, rememberMe: boolean) => void;
+  onSubmit: (username: string, password: string, rememberMe: boolean) => void;
 }
 
 const LoginForm = ({ onSubmit }: LoginFormProps) => {
-  const [email, setEmail] = useState('');
+  const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = () => {
-    onSubmit(email, password, rememberMe);
+    onSubmit(username, password, rememberMe);
   };
 
   return (
+
     <form onSubmit={(e) => e.preventDefault()}>
       <div className="mb-4">
         <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
         <input
           type="email"
           id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={username}
+          onChange={(e) => setUserName(e.target.value)}
           className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Email Address"
         />

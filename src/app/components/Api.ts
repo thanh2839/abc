@@ -1,4 +1,4 @@
-const API = '26.223.176.208:3001';
+const API = 'http://26.223.176.208:3001';
 const ApiRoutes = {
 // Login-Register
     login: `${API}/api/auth/login`,
