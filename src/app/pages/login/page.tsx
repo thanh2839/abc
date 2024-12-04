@@ -2,9 +2,9 @@
 import { useState } from 'react';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
-import ApiRoutes from '../components/Api';
-import Header from '../components/header';
-
+import ApiRoutes from '@/app/services/Api';
+import Header from '../../components/header';
+import { Footer } from '../../components/Footer'
 const Page = () => {
   const [isRegister, setIsRegister] = useState(false); // Quản lý trạng thái hiển thị form
   const [passwordError, setPasswordError] = useState('');
@@ -106,6 +106,7 @@ const Page = () => {
         )}
       </div>
     </div>
+    <Footer></Footer>
     </div>
   );
 };
