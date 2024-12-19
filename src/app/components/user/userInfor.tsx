@@ -31,7 +31,6 @@ const UserInfor: React.FC = () => {
         setPreviewImage(data.avatar); // Set ảnh avatar ban đầu
       } catch (error) {
         console.error('Error fetching user info:', error);
-        alert('Failed to load user info.');
       }
     };
 
