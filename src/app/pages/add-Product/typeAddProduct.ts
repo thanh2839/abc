@@ -1,6 +1,7 @@
 import { product } from "@/app/app/data";
 import ApiRoutes from "@/app/services/Api";
 import exp from "constants";
+import { Tag } from "lucide-react";
 
 export interface Product {
     name: string;
@@ -81,3 +82,17 @@ export const createProduct = async (product: Product): Promise<void> => {
   }
   console.log(response);
 }
+
+// create Tag
+export const createTagAPI = async (tag : string) => {
+  const response = await fetch(ApiRoutes.Tag_create, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+
+    body: JSON.stringify({ 
+      name: Tag 
+    }),
+  });
+  if (!response.ok) throw new Error('Failed to create tag');
+  return response.json();
+};

@@ -67,7 +67,7 @@ const UserInfor: React.FC = () => {
     <main className="flex flex-col pb-32 bg-white max-md:pb-24">
       <header className="flex overflow-hidden flex-col justify-center items-start py-3.5 w-full text-2xl font-bold text-black bg-slate-300 max-md:max-w-full">
         <div className="flex flex-col px-12 max-md:px-5">
-          <h1 className="gap-2.5 p-2.5">User Information</h1>
+          <h1 className="gap-2.5 p-2.5">Thông tin người dùng</h1>
         </div>
       </header>
 
@@ -77,7 +77,7 @@ const UserInfor: React.FC = () => {
             <div className="flex flex-col w-full font-medium max-md:mt-9 max-md:max-w-full">
               <form className="flex overflow-hidden flex-col items-start p-2.5 mt-14 w-full bg-white rounded max-md:mt-10 max-md:max-w-full">
                 <InputField
-                  label="Full name"
+                  label="Tên"
                   value={userInfo.fullname}
                   onChange={(e) => setUserInfo({ ...userInfo, fullname: e.target.value })}
                 />
@@ -90,7 +90,7 @@ const UserInfor: React.FC = () => {
                 </div>
                 <div className="mt-8">
                   <InputField
-                    label="Password"
+                    label="Mật khẩu"
                     type="password"
                     value={userInfo.password}
                     onChange={(e) => setUserInfo({ ...userInfo, password: e.target.value })}

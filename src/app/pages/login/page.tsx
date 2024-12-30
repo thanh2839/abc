@@ -26,7 +26,8 @@ const Page = () => {
       })
       if (response.ok) {
         const data = await response.json();
-        console.log(data.data.accessToken);
+        // console.log(data.data.accessToken);
+        localStorage.setItem('token', data.data.accessToken)
         // const { accessToken } = data.token;
         // console.log('Access Token:', accessToken);
 

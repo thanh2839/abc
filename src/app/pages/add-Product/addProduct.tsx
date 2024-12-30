@@ -6,32 +6,40 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-import { Product , Category, Tag, fetchCategories, fetchTag} from './typeAddProduct';
+import { Product, Category, Tag, fetchCategories, fetchTag, createTagAPI } from './typeAddProduct';
 import ApiRoutes from '@/app/services/Api';
 import { error } from 'console';
 
 const AddProductForm = () => {
   const [product, setProduct] = useState<Product>({
     name: '',
-    categoryId: 1, 
+    categoryId: 1,
     description: '',
     productTags: [],
     productOptions: []
   });
   const [category, setCategories] = useState<Category[]>([]);
-  const [ tag , setTag] = useState<Tag[]>([]);
-  
+  const [tag, setTag] = useState<Tag[]>([]);
+
+  //search tag
+  const [searchTerm, setSearchTerm] = React.useState('');
+  // filter tag
+  const filteredTags = tag.filter(t =>
+    t.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [categoriesData, tagData] = await Promise.all([fetchCategories(), fetchTag()])
-        
+
         setCategories(categoriesData.data);
         setTag(tagData.data);
 
-        
+
         console.log('Fetched Tag:', tag);
-        
+
       } catch (e) {
         console.log(e);
       }
@@ -39,21 +47,7 @@ const AddProductForm = () => {
     fetchData();
     console.log('Fetched Category:', category);
     // console.log(category);
-  }, [] );
-
-
-
-  // const categories = [
-  //   { id: 1, name: 'Áo' },
-  //   { id: 2, name: 'Quần' },
-  //   { id: 3, name: 'Phụ kiện' }
-  // ];
-
-  // const availableTags = [
-  //   { id: 1, name: 'Mùa hè' },
-  //   { id: 2, name: 'Thể thao' },
-  //   { id: 3, name: 'Casual' }
-  // ];
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, // Cập nhật kiểu của e.target
@@ -61,7 +55,7 @@ const AddProductForm = () => {
     optionIndex: number | null = null
   ) => {
     const { value } = e.target;
-  
+
     if (optionIndex !== null) {
       // Handle product option changes
       const newProductOptions = [...product.productOptions];
@@ -81,8 +75,8 @@ const AddProductForm = () => {
       }));
     }
   };
-  
-  
+
+
 
   const handleTagToggle = (tagId: number) => {
     setProduct(prev => {
@@ -127,150 +121,223 @@ const AddProductForm = () => {
     // TODO: Add API call to submit product
   };
 
+  //call Api create Tag
+  const handleCreateTag = async (tagName: string) => {
+    if (!tagName.trim()) return;
+
+    try {
+      const newTag = await createTagAPI(tagName); // Gọi API để tạo tag
+      setTag([...tag, newTag]); // Cập nhật danh sách tag
+      handleTagToggle(newTag.id); // Tự động thêm tag mới vào danh sách chọn
+      setSearchTerm(''); // Xóa từ khóa tìm kiếm
+      alert('Tag mới đã được tạo!');
+    } catch (error) {
+      console.error('Lỗi khi tạo tag:', error);
+      alert('Không thể tạo tag. Vui lòng thử lại.');
+    }
+  };
+
+
+
   return (
     <main className="flex flex-col pb-32 bg-white max-md:pb-24">
-        <div className="self-center mt-12 w-full max-w-[1339px] max-md:mt-10 max-md:max-w-full">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Basic Product Information */}
-        <div className="grid grid-cols-2 gap-4">
+      <div className="self-center mt-12 w-full max-w-[1339px] max-md:mt-10 max-md:max-w-full">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Basic Product Information */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-2">Tên Sản Phẩm</label>
+              <Input
+                type="text"
+                value={product.name}
+                onChange={(e) => handleInputChange(e, 'name')}
+                placeholder="Nhập tên sản phẩm"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block mb-2">Danh Mục</label>
+              <Select
+                value={product.categoryId.toString()}
+                onValueChange={(value) => setProduct(prev => ({ ...prev, categoryId: Number(value) }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Chọn danh mục" />
+                </SelectTrigger>
+                <SelectContent>
+                  {category.map(category => (
+                    <SelectItem key={category.id} value={category.id.toString()}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Description */}
           <div>
-            <label className="block mb-2">Tên Sản Phẩm</label>
-            <Input
-              type="text"
-              value={product.name}
-              onChange={(e) => handleInputChange(e, 'name')}
-              placeholder="Nhập tên sản phẩm"
-              required
+            <label className="block mb-2">Mô Tả Sản Phẩm</label>
+            <Textarea
+              value={product.description}
+              onChange={(e) => handleInputChange(e, 'description')}
+              placeholder="Nhập mô tả sản phẩm"
+              rows={4}
             />
           </div>
-          
+
+          {/* Tags */}
           <div>
-            <label className="block mb-2">Danh Mục</label>
-            <Select 
-              value={product.categoryId.toString()} 
-              onValueChange={(value) => setProduct(prev => ({ ...prev, categoryId: Number(value) }))}
+            <label className="block mb-2">Nhãn Sản Phẩm</label>
+            <Select
+              onValueChange={(value) => {
+                handleTagToggle(Number(value));
+              }}
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Chọn danh mục" />
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Chọn nhãn sản phẩm" />
               </SelectTrigger>
               <SelectContent>
-                {category.map(category => (
-                  <SelectItem key={category.id} value={category.id.toString()}>
-                    {category.name}
-                  </SelectItem>
-                ))}
+                {/* Input để tìm kiếm */}
+                <div className="p-2 flex items-center gap-2">
+                  <input
+                    type="text"
+                    placeholder="Tìm kiếm nhãn sản phẩm"
+                    className="flex-1 p-2 border rounded-md"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <button
+                    onClick={() => handleCreateTag(searchTerm)}
+                    className="p-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:bg-gray-300"
+                    disabled={!searchTerm.trim() || tag.some(t => t.name.toLowerCase() === searchTerm.toLowerCase())}
+                  >
+                    Tạo tag
+                  </button>
+                </div>
+                {/* Hiển thị danh sách tag dựa trên từ khóa tìm kiếm */}
+                {filteredTags.map(tag => {
+                  const isSelected = product.productTags.includes(tag.id);
+                  return (
+                    <SelectItem
+                      key={tag.id}
+                      value={tag.id.toString()}
+                    >
+                      <div className="flex items-center gap-2">
+                        {tag.name}
+                        {isSelected && (
+                          <span className="h-2 w-2 bg-primary rounded-full" />
+                        )}
+                      </div>
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
+
+            {/* Hiển thị các tags đã chọn */}
+            <div className="flex flex-wrap gap-2 mt-2">
+              {product.productTags.map(tagId => {
+                const selectedTag = tag.find(t => t.id === tagId);
+                return selectedTag && (
+                  <div
+                    key={tagId}
+                    className="flex items-center gap-1 bg-primary/10 text-primary px-2 py-1 rounded-md"
+                  >
+                    {selectedTag.name}
+                    <button
+                      onClick={() => handleTagToggle(tagId)}
+                      className="hover:text-destructive"
+                    >
+                      ×
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
 
-        {/* Description */}
-        <div>
-          <label className="block mb-2">Mô Tả Sản Phẩm</label>
-          <Textarea
-            value={product.description}
-            onChange={(e) => handleInputChange(e, 'description')}
-            placeholder="Nhập mô tả sản phẩm"
-            rows={4}
-          />
-        </div>
 
-        {/* Tags */}
-        <div>
-          <label className="block mb-2">Nhãn Sản Phẩm</label>
-          <div className="flex flex-wrap gap-2">
-            {tag.map(tag => (
+
+          {/* Product Options */}
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold">Các Phiên Bản Sản Phẩm</h3>
               <Button
-                key={tag.id}
                 type="button"
-                variant={product.productTags.includes(tag.id) ? 'default' : 'outline'}
-                onClick={() => handleTagToggle(tag.id)}
-                size="sm"
+                variant="outline"
+                onClick={addProductOption}
               >
-                {tag.name}
+                + Thêm Phiên Bản
               </Button>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        {/* Product Options */}
-        <div>
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold">Các Phiên Bản Sản Phẩm</h3>
-            <Button 
-              type="button" 
-              variant="outline"
-              onClick={addProductOption}
-            >
-              + Thêm Phiên Bản
-            </Button>
-          </div>
-
-          {product.productOptions.map((option, index) => (
-            <div key={index} className="border rounded-lg p-4 mb-4 relative">
-              {product.productOptions.length > 1 && (
-                <Button 
-                  type="button"
-                  variant="destructive"
-                  size="sm"
-                  className="absolute top-2 right-2"
-                  onClick={() => removeProductOption(index)}
-                >
-                  Xóa
-                </Button>
-              )}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block mb-2">Tên Phiên Bản</label>
-                  <Input
-                    type="text"
-                    value={option.name}
-                    onChange={(e) => handleInputChange(e, 'name', index)}
-                    placeholder="Ví dụ: Màu Đỏ"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block mb-2">Giá Gốc</label>
-                  <Input
-                    type="number"
-                    value={option.price}
-                    onChange={(e) => handleInputChange(e, 'price', index)}
-                    placeholder="Nhập giá"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block mb-2">Giá Khuyến Mãi</label>
-                  <Input
-                    type="number"
-                    value={option.salePrice}
-                    onChange={(e) => handleInputChange(e, 'salePrice', index)}
-                    placeholder="Nhập giá khuyến mãi"
-                  />
-                </div>
-                <div>
-                  <label className="block mb-2">Số Lượng Tồn Kho</label>
-                  <Input
-                    type="number"
-                    value={option.stockQuantity}
-                    onChange={(e) => handleInputChange(e, 'stockQuantity', index)}
-                    placeholder="Nhập số lượng"
-                    required
-                  />
+            {product.productOptions.map((option, index) => (
+              <div key={index} className="border rounded-lg p-4 mb-4 relative">
+                {product.productOptions.length > 1 && (
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    className="absolute top-2 right-2"
+                    onClick={() => removeProductOption(index)}
+                  >
+                    Xóa
+                  </Button>
+                )}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block mb-2">Tên Phiên Bản</label>
+                    <Input
+                      type="text"
+                      value={option.name}
+                      onChange={(e) => handleInputChange(e, 'name', index)}
+                      placeholder="Ví dụ: Màu Đỏ"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2">Giá Gốc</label>
+                    <Input
+                      type="number"
+                      value={option.price}
+                      onChange={(e) => handleInputChange(e, 'price', index)}
+                      placeholder="Nhập giá"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2">Giá Khuyến Mãi</label>
+                    <Input
+                      type="number"
+                      value={option.salePrice}
+                      onChange={(e) => handleInputChange(e, 'salePrice', index)}
+                      placeholder="Nhập giá khuyến mãi"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2">Số Lượng Tồn Kho</label>
+                    <Input
+                      type="number"
+                      value={option.stockQuantity}
+                      onChange={(e) => handleInputChange(e, 'stockQuantity', index)}
+                      placeholder="Nhập số lượng"
+                      required
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        {/* Submit Button */}
-        <div className="flex justify-end">
-          <Button type="submit" className="w-full">
-            Thêm Sản Phẩm
-          </Button>
-        </div>
-      </form>
+          {/* Submit Button */}
+          <div className="flex justify-end">
+            <Button type="submit" className="w-full">
+              Thêm Sản Phẩm
+            </Button>
+          </div>
+        </form>
       </div>
     </main>
   );

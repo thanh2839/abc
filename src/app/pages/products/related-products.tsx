@@ -1,12 +1,12 @@
 'use client'
-import { relatedProducts } from '../../app/data';
+import relatedProduct from './page';
 import Image from 'next/image';
 import { useState } from 'react';
 
 export function RelatedProducts() {
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  const maxIndex = relatedProducts.length - 5; // Đảm bảo chỉ có 5 sản phẩm hiển thị
+  console.log("RelateAAA: ",relatedProduct.data)
+  const maxIndex = relatedProduct.length - 5; // Đảm bảo chỉ có 5 sản phẩm hiển thị
 
   // Hàm để cuộn sang phải
   const handleNext = () => {
@@ -32,12 +32,12 @@ export function RelatedProducts() {
         <div className="flex overflow-hidden space-x-6 pb-4">
           <div className="flex transition-transform duration-300" style={{ transform: `translateX(-${currentIndex * 350}px)` }}>
             <div className="flex gap-[20px]">
-              {relatedProducts.slice(0, 10).map((relatedProduct) => (
-                <div key={relatedProduct.id} className="group relative w-64">
-                  <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md group-hover:opacity-75">
+              {/* {relatedProduct.slice(0, 10).map((product) => (
+                <div key={product.id} className="group relative w-64">
+                  <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md group-hover:opacity-75 bg-gray-200">
                     <Image
-                      src={relatedProduct.imageSrc}
-                      alt={relatedProduct.imageAlt}
+                      src={product.imageSrc || "/placeholder-image.png"} // Replace with a default placeholder if no image
+                      alt={product.name || "Product image"}
                       className="h-full w-full object-cover object-center"
                       width={256}
                       height={256}
@@ -46,21 +46,20 @@ export function RelatedProducts() {
                   <div className="mt-4 flex justify-between">
                     <div>
                       <h3 className="text-sm text-gray-700">
-                        <a href={relatedProduct.href}>
+                        <a href={`/shop-product/${product.id}`}>
                           <span aria-hidden="true" className="absolute inset-0" />
-                          {relatedProduct.name}
+                          {product.name}
                         </a>
                       </h3>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {relatedProduct.color}
-                      </p>
+                      <p className="mt-1 text-sm text-gray-500">{product.category?.name}</p>
                     </div>
                     <p className="text-sm font-medium text-gray-900">
-                      {relatedProduct.price}
+                      {product.price ? `${product.price.toLocaleString()} VNĐ` : "N/A"}
                     </p>
                   </div>
                 </div>
-              ))}
+              ))} */}
+
             </div>
           </div>
 
@@ -73,14 +72,14 @@ export function RelatedProducts() {
             className="bg-gray-800 text-white p-2 rounded-full transform -translate-y-7"
             disabled={currentIndex === 0}
           >
-            &#60; 
+            &#60;
           </button>
           <button
             onClick={handleNext}
             className="bg-gray-800 text-white p-2 rounded-full transform -translate-y-7"
             disabled={currentIndex === maxIndex}
           >
-            &#62; 
+            &#62;
           </button>
         </div>
 
