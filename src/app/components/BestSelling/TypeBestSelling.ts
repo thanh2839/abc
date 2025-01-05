@@ -26,14 +26,14 @@ export const fetchProductInforList = async (list: Number[]) => {
     console.log("aaaaabbbccc: ",JSON.stringify({
         "list" : [3,2,1],
     }))
-    const body = { "list": [3,2,1]}
+
     try {
         const response = await fetch(ApiRoutes.Product_inforList, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(body)
+            body: JSON.stringify(list)
         })
         if (!response.ok) {
             throw Error(`HTTP error! Status: ${response.status}`);
