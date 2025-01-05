@@ -9,8 +9,44 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Product, fetchCategories, fetchTag, Tag, Category, fetchProductSearch, fetchProductSell, fetchCategoriesProduct } from './typeSellProduct';
 import Link from 'next/link';
 import ShopProduct from '../products/page';
+import jwt from 'jsonwebtoken';
+
+const formatPrice = (price: number): string => {
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+      useGrouping: true,
+    })
+      .format(price)
+      .replace(/,/g, '.');
+  };
+
 
 export default function ProductsPage() {
+    const [token, setToken] = useState<string | null>(null);
+    // format gia tien
+    
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+          const storedToken = sessionStorage.getItem('accessToken');
+          const role = sessionStorage.getItem('role');
+          if(storedToken){
+          const decode = jwt.decode(storedToken)
+          console.log(role)
+          }
+          setToken(storedToken);
+    
+          if (storedToken) {
+            console.log('Token retrieved from sessionStorage:', storedToken);
+          } else {
+            console.error('No token found. Redirecting to login...');
+            // window.location.href = '/login'; // Điều hướng nếu không có token
+          }
+        }
+      }, []);
+    
+
     const [category, setCategories] = useState<Category[]>([]);
     const [tag, setTag] = useState<Tag[]>([]);
     const [priceRange, setPriceRange] = useState([0, 1000]);
@@ -30,6 +66,11 @@ export default function ProductsPage() {
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
     const currentProducts = product.slice(indexOfFirstProduct, indexOfLastProduct);
 
+    //chuyen id sang từ home 
+    const getProductIdFromURL = (): string | null => {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('id');
+      };
 
     // Tính tổng số trang
     const totalPages = Math.ceil(product.length / productsPerPage);
@@ -57,7 +98,7 @@ export default function ProductsPage() {
                 setCategories(categoriesData.data);
                 setTag(tagData.data);
                 // console.log('category:', category);
-                console.log('Product-AAA:', product);
+                console.log('Product-AAA:', product.data[0].image);
             }
 
             catch (error) {
@@ -107,12 +148,10 @@ export default function ProductsPage() {
                 name: searchQuery || undefined,
             };
 
-            // Type-safe way to remove undefined values
             const cleanedParams: FilterParams = Object.fromEntries(
                 Object.entries(filterParams).filter(([_, value]) => value !== undefined)
             ) as FilterParams;
 
-            // console.log('Sending filter parameters:', cleanedParams);
             const filteredProducts = await fetchProductSearch(cleanedParams);
 
             setProduct(filteredProducts.data);
@@ -129,6 +168,10 @@ export default function ProductsPage() {
     }, [product]);
 
     useEffect(() => {
+        const cateId = getProductIdFromURL();
+        if(cateId !== null) {
+            setSelectedCategory(Number(cateId))
+        }
         const fetchProductCategory = async () => {
             if (selectedCategory !== null) {
                 const data = await fetchCategoriesProduct(selectedCategory);
@@ -290,7 +333,7 @@ export default function ProductsPage() {
                                 <div key={index} className="group">
                                     <div className="relative aspect-square mb-4">
                                         <img
-                                            src={`/api/placeholder/300/300`} // Thay bằng URL ảnh nếu có
+                                            src={product.image} 
                                             alt={product.name}
                                             className="w-full h-full object-cover rounded-lg"
                                         />
@@ -319,7 +362,7 @@ export default function ProductsPage() {
                                         <div className="flex items-center gap-2">
                                             <span className="font-medium">
                                                 {/* Thay đổi giá hiển thị */}
-                                                ${product.price || '0.00'}
+                                                {formatPrice(Number(product.options[0].price)) || '0.00'}VNĐ
                                             </span>
                                         </div>
                                         <div className="text-sm text-gray-500 mt-2">

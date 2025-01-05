@@ -4,6 +4,7 @@ import Product from "../products/page";
 export interface Product {
     name: string;
     categoryId: number;
+    image : string;
     description: string;
     productTags: number[]; 
     productOptions: {
@@ -24,6 +25,10 @@ export interface Product {
     name: string;
   }
   
+
+  const cloudName = "dsymtu3j5";
+  const uploadPreset = "shop_Santuary";
+
 
   export const getProductByID = async (id: number) => {
     try {
@@ -46,6 +51,7 @@ export interface Product {
       const product: Product = {
         name: fetchGetProduct.data.name,
         categoryId: fetchGetProduct.data.category,
+        image : fetchGetProduct.data.image,
         description: fetchGetProduct.data.description,
         productTags: fetchGetProduct.data.tags || [], 
         productOptions: fetchGetProduct.data.options|| []

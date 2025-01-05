@@ -1,24 +1,28 @@
 'use client'
 import { useState } from 'react';
+import jwt from 'jsonwebtoken';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import ApiRoutes from '@/app/services/Api';
 import Header from '../../components/header';
 import { Footer } from '../../components/Footer'
+
+
 const Page = () => {
   const [isRegister, setIsRegister] = useState(false); // Quản lý trạng thái hiển thị form
   const [passwordError, setPasswordError] = useState('');
-// Handle Login
+
+
+  // Handle Login
   const handleLogin = async (username: string, password: string, rememberMe: boolean) => {
-    // alert(`Email: ${email}\nPassword: ${password}\nRemember Me: ${rememberMe}`);
     const body = {
       username: username,
       password: password,
-    }    
+    }
     try {
-      const response = await fetch (ApiRoutes.login, {
+      const response = await fetch(ApiRoutes.login, {
         method: 'POST',
-        // mode: 'no-cors',
+
         headers: {
           'Content-Type': 'application/json',
         },
@@ -26,15 +30,20 @@ const Page = () => {
       })
       if (response.ok) {
         const data = await response.json();
-        // console.log(data.data.accessToken);
-        localStorage.setItem('token', data.data.accessToken)
-        // const { accessToken } = data.token;
-        // console.log('Access Token:', accessToken);
+        console.log(data.data.accessToken);
+        const decode = jwt.decode(data.data.accessToken);
+        const role = decode.roles[0]
+        sessionStorage.setItem('role', role)
+        sessionStorage.setItem('accessToken', data.data.accessToken);
+        sessionStorage.setItem('UserId', data.data.id);
+        sessionStorage.setItem('nameUser', data.data.fullname);
+        sessionStorage.setItem('email', data.data.email);
+        sessionStorage.setItem('avatar', data.data.avatar);
 
-        // sessionStorage.setItem('accessToken', accessToken);
+        window.location.href = '/pages/sellProduct';
 
         //remember me
-        if(rememberMe) {
+        if (rememberMe) {
           localStorage.setItem('login', data)
         }
       }
@@ -48,90 +57,130 @@ const Page = () => {
     }
   };
 
-// Handle Register 
-
-  const handleRegister = async (username: String, password: String, fullname:String, email: String) => {
+  // call Api Login lấy token
+  const memberLogin = async (bodyLogin: any) => {
     try {
-        const response = await fetch(ApiRoutes.register, {
-          method: 'POST',
-          headers: {
-            'Content-Type' : 'application/json'
-          },
-          body: JSON.stringify({
-            username: username,
-            "password": password,
-            "fullname": fullname,
-            "email": email,
-            "avatar": ""
-          })
-        })
-        if(response.ok) {
-          const data = await response.json();
-          console.log('Registration successful', data);
-        }
+      const response = await fetch(ApiRoutes.login, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyLogin)
+      })
+      if (response.ok) {
+        const data = await response.json();
+        return data.data.accessToken;
       }
+      else {
+        const errorData = await response.json();
+        console.log(`Login failed: ${errorData.message || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.log('Error during login:', error);
+    }
+  }
+  // call api update Member
+  const memberPOST = async (memberId: number, memberToken: string | null, bodyMember: any) => {
+    try {
+      const response = await fetch(ApiRoutes.Member_Update(memberId), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${memberToken}`
+        },
+        body: JSON.stringify(bodyMember)
+      })
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.log(`Login failed: ${errorData.message || 'Unknown error'}`);
+      }
+      const memberInfor = await response.json();
+      console.log("body: ", memberInfor)
+    }
+    catch (e) {
+      console.log('Error during login:', e);
+    }
+  }
+
+  // Handle Register 
+  const handleRegister = async (username: String, password: String, fullname: String, email: String, gender: string, date: Date | undefined, memberTag: number[]) => {
+    const body = {
+      username: username,
+      password: password,
+      fullname: fullname,
+      email: email,
+      avatar: ""
+    }
+    const bodyMember = {
+      gender: gender,
+      dateOfBirth: date,
+      bio: "",
+      memberTags: memberTag,
+    }
+    const bodyLogin = {
+      username: username,
+      password: password,
+    }
+    console.log(body)
+    try {
+      const response = await fetch(ApiRoutes.register, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      })
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Registration successful', data.data.id);
+        const memberToken = await memberLogin(bodyLogin);
+        await memberPOST(data.data.id, memberToken, bodyMember);
+
+        setIsRegister(false);
+      }
+    }
     catch (error) {
       console.error('Error during registration:', error);
-      
-      // Xử lý lỗi, ví dụ: hiển thị thông báo lỗi cho người dùng
-      // alert(error.message || 'Registration failed, please try again.');
+
     }
   };
 
   return (
     <div className="min-h-screen bg-blue-100">
-      <Header/>
-    <div className="flex items-center justify-center min-h-screen bg-blue-100">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-96">
-        <h1 className="text-2xl font-bold text-center mb-4">Welcome to AL1.com</h1>
+      <Header />
+      <div className="flex items-center justify-center min-h-screen bg-blue-100">
+        <div
+          className={`bg-white shadow-lg rounded-lg p-8 ${isRegister ? 'w-[800px]' : 'w-96'
+            } transition-all duration-300`}
+        >
+          <h1 className="text-2xl font-bold text-center mb-4">Welcome to Sentuary.com</h1>
 
-        <div className="flex justify-between mb-6">
-          <button
-            onClick={() => setIsRegister(false)} // Hiển thị form đăng nhập
-            className={`text-gray-700 pb-1 ${!isRegister ? 'font-bold border-b-2 border-blue-500' : 'font-normal'}`}
-          >
-            Sign in
-          </button>
-          <button
-            onClick={() => setIsRegister(true)} // Hiển thị form đăng ký
-            className={`text-gray-700 pb-1 ${isRegister ? 'font-bold border-b-2 border-blue-500' : 'font-normal'}`}
-          >
-            Register
-          </button>
+          <div className="flex justify-between mb-6">
+            <button
+              onClick={() => setIsRegister(false)} // Hiển thị form đăng nhập
+              className={`text-gray-700 pb-1 ${!isRegister ? 'font-bold border-b-2 border-blue-500' : 'font-normal'}`}
+            >
+              Sign in
+            </button>
+            <button
+              onClick={() => setIsRegister(true)} // Hiển thị form đăng ký
+              className={`text-gray-700 pb-1 ${isRegister ? 'font-bold border-b-2 border-blue-500' : 'font-normal'}`}
+            >
+              Register
+            </button>
+          </div>
+
+          {isRegister ? (
+            <RegisterForm onSubmit={handleRegister} passwordError={passwordError} setPasswordError={setPasswordError} />
+          ) : (
+            <LoginForm onSubmit={handleLogin} />
+          )}
         </div>
-
-        {isRegister ? (
-          <RegisterForm onSubmit={handleRegister} passwordError={passwordError} setPasswordError={setPasswordError} />
-        ) : (
-          <LoginForm onSubmit={handleLogin} />
-        )}
       </div>
-    </div>
-    <Footer></Footer>
+      <Footer></Footer>
     </div>
   );
 };
 
 export default Page;
 
-// import { signup } from '@/app/actions/auth'
- 
-// export function SignupForm() {
-//   return (
-//     <form action={signup}>
-//       <div>
-//         <label htmlFor="name">Name</label>
-//         <input id="name" name="name" placeholder="Name" />
-//       </div>
-//       <div>
-//         <label htmlFor="email">Email</label>
-//         <input id="email" name="email" type="email" placeholder="Email" />
-//       </div>
-//       <div>
-//         <label htmlFor="password">Password</label>
-//         <input id="password" name="password" type="password" />
-//       </div>
-//       <button type="submit">Sign Up</button>
-//     </form>
-//   )
-// }

@@ -13,7 +13,7 @@ const ApiRoutes = {
     Role: `${API}/api/role/get-all`,
     // Member
     Member_Update: (id: number) => `${API}/api/member/update/${id}`,
-    Member_infor: (id: number) => `${API}/api/member/infor/${id}`,
+    Member_infor: (id: number) => `${API}/api/member/info/${id}`,
     // Tag
     Tag_create: `${API}/api/tag/create`,
     Tag_getAll: `${API}/api/tag/get-all`,
@@ -44,6 +44,32 @@ const ApiRoutes = {
     Category_create: `${API}/api/category/create`,
     Category_getAll: `${API}/api/category/get-all`,
     Category_delete: `${API}/api/category/delete`,
+
+    //upload Image clound
+    uploadImageCloudinary : `${API}/api/upload`,
+
+    AddItemCart : (id : number) => `${API}/api/cart/add-items/${id}`,
+    InforCart : (id : number) => `${API}/api/cart/items/${id}`,
+    DeleteItemFromCart: (idUser: number, IdProductOption: number) => `${API}/api/cart/delete/${idUser}?productOptionId=${IdProductOption}`,
+    adjust_quantity: (idUser : number) => `${API}/api/cart/adjust-quantity/${idUser}`,
+
+    // shipping
+    getAllShipping : `${API}/api/shipping/get-all`,
+    addShippingMethod : `${API}/api/shipping/create`,
+
+
+
+    //payment
+    getAllPayment : `${API}/api/payment/get-all`,
+    addPaymentMethod : `${API}/api/payment/create`,
+
+    //Order 
+    createOrder: (id: number) => `${API}/api/order/create/${id}`,
+    getOrderInfor: (orderId : number, userId: number) => `${API}/api/order/get-order/${userId}?orderId=${orderId}`,
+    getOderList: (userId: number) => `${API}/api/order/get-orders/${userId}`,
+    getOderByAdmin: (status: string, from : string, to : string) => `${API}/api/order/get-all-orders?status=${status}&from${from}&to${to}`,
+    UpdateOderByAdmin : (oderId : string, status: string) => `${API}/api/order/update-status?orderId=${oderId}&status=${status}`,
+
 };
 
 export default ApiRoutes;

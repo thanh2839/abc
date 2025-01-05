@@ -15,11 +15,25 @@ const AddProductForm = () => {
     name: '',
     categoryId: 1,
     description: '',
+    image: '',
     productTags: [],
     productOptions: []
   });
   const [category, setCategories] = useState<Category[]>([]);
   const [tag, setTag] = useState<Tag[]>([]);
+  const [image, setImage] = useState<string | null>(null);
+
+  //upload Image
+  const handleImageUpload = (event: any) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result); // Set the image preview in state
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   //search tag
   const [searchTerm, setSearchTerm] = React.useState('');
@@ -143,6 +157,36 @@ const AddProductForm = () => {
     <main className="flex flex-col pb-32 bg-white max-md:pb-24">
       <div className="self-center mt-12 w-full max-w-[1339px] max-md:mt-10 max-md:max-w-full">
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Upload Product Image */}
+          <div>
+            <label className="block mb-2">Ảnh Sản Phẩm</label>
+            <div className="flex items-center gap-4">
+              {/* Preview Uploaded Image or File Input Button */}
+              <div
+                className="w-24 h-24 border border-gray-300 rounded-md flex justify-center items-center cursor-pointer relative"
+                onClick={() => document.getElementById("fileInput")?.click()}
+              >
+                {/* If there is an image, show it as preview */}
+                {image ? (
+                  <img
+                    src={image}
+                    alt="Product"
+                    className="w-full h-full object-cover rounded-md"
+                  />
+                ) : (
+                  <span className="text-gray-500">Chọn ảnh</span>
+                )}
+                {/* Hidden file input */}
+                <input
+                  type="file"
+                  id="fileInput"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+              </div>
+            </div>
+          </div>
           {/* Basic Product Information */}
           <div className="grid grid-cols-2 gap-4">
             <div>

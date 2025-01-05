@@ -80,7 +80,7 @@ export const getProductByID = async (id: number): Promise<BProduct> => {
   }
 };
 
-export const fetchGetProductCategory = async (id: number) => { 
+export const fetchGetProductCategory = async (id: number) => {
   try {
     const response = await fetch(ApiRoutes.Product_InforCategory(id), {
       method: "POST",
@@ -90,11 +90,42 @@ export const fetchGetProductCategory = async (id: number) => {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
 
-    const data = await response.json();  
+    const data = await response.json();
     console.log(data);
     return data;
   } catch (error) {
     console.error("Error fetching product:", error);
-    throw error;  
+    throw error;
   }
 };
+
+export const fetchAddCart = async (id: number, accessToken: string, selectedSize: number, quantity: number) => {
+  const body = [
+    {
+      "productOptionId": selectedSize.id,
+      "quantity": quantity
+    }
+  ]
+  console.log("body; ", body)
+  try {
+    const response = await fetch(ApiRoutes.AddItemCart(Number(id)), {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      },
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Product added to cart:", data.data);
+  }
+  catch (e) {
+    console.error("Error fetching product:", e);
+    throw e;
+  }
+}
+

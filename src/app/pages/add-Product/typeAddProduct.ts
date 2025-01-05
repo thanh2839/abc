@@ -8,6 +8,7 @@ export interface Product {
     categoryId: number;
     description: string;
     productTags: number[]; 
+    image: string;
     productOptions: {
       name: string;
       price: number;

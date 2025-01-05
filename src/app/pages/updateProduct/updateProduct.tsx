@@ -8,11 +8,14 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 
+  const cloudName = "dsymtu3j5";
+  const uploadPreset = "shop_Santuary";
 
 const GetupdateProduct = () => {
     const [product, setProduct] = useState<Product>({
         name: '',
         categoryId: 1,
+        image: '',
         description: '',
         productTags: [],
         productOptions: []
@@ -22,6 +25,59 @@ const GetupdateProduct = () => {
     const [tag, setTag] = useState<Tag[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredTags, setFilteredTags] = useState<Tag[]>([]);
+    const [image, setImage] = useState<string | null>(null);
+
+    const [error, setError] = useState<string | null>(null);
+
+    const [uploading, setUploading] = useState(false);
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+    // tải ảnh từ local lên
+    const handleImageUpload = (event: any) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(reader.result); 
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    //call api cloudinary upload
+    const handleUpload = async () => {
+        if (!image) {
+          setError('Please select an image to upload.');
+          return;
+        }
+    
+        setError(null);
+        setUploading(true);
+    
+        const formData = new FormData();
+        formData.append('file', image);
+        formData.append('upload_preset', uploadPreset);
+    
+        try {
+          const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+            method: 'POST',
+            body: formData,
+          });
+    
+          const data = await response.json();
+    
+          if (response.ok) {
+            setImageUrl(data.secure_url);  // Lưu URL ảnh vào state
+            console.log('Image uploaded successfully! URL:', data.secure_url); // Log đường dẫn ảnh
+          } else {
+            setError(data.error?.message || 'Failed to upload image.');
+          }
+        } catch (err) {
+          setError('Something went wrong. Please try again.');
+        } finally {
+          setUploading(false);
+        }
+      };
 
     // Fetch product data by ID and populate the form
     useEffect(() => {
@@ -34,11 +90,12 @@ const GetupdateProduct = () => {
                 console.log('category:', category);
                 console.log('tag:', tag);
 
-                const fetchedProduct = await getProductByID(2); // Replace 2 with the desired product ID
+                const fetchedProduct = await getProductByID(3); 
                 // console.log('Fetched Product:', fetchedProduct);
                 const product: Product = {
                     name: fetchedProduct.data.name,
                     categoryId: fetchedProduct.data.category,
+                    image: fetchedProduct.data.image,
                     description: fetchedProduct.data.description,
                     productTags: fetchedProduct.data.tags.map(tag => tag.id) || [],
                     productOptions: fetchedProduct.data.options || []
@@ -46,8 +103,8 @@ const GetupdateProduct = () => {
                 };
 
                 setProduct(product);
-                console.log('taaaaag:', product.productTags);
-                console.log('Set Product:', product.categoryId.toString());
+                // console.log('taaaaag:', product.productTags);
+                // console.log('Set Product:', product.categoryId.toString());
             } catch (error) {
                 console.error('Error fetching product data:', error);
             }
@@ -98,6 +155,9 @@ const GetupdateProduct = () => {
     };
 
     const handleSubmit = (e: React.FormEvent) => {
+        handleUpload();
+
+        
         e.preventDefault();
         // Handle form submission logic
         console.log('Product submitted:', product);
@@ -127,7 +187,7 @@ const GetupdateProduct = () => {
 
     const handleDelete = async () => {
         // if (!window.confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) return;
-        
+
         // try {
         //   await fetch(`/api/products/${productId}`, {
         //     method: 'DELETE'
@@ -136,11 +196,41 @@ const GetupdateProduct = () => {
         // } catch (error) {
         //   console.error('Error:', error);
         // }
-      };
+    };
     return (
         <main className="flex flex-col pb-32 bg-white max-md:pb-24">
             <div className="self-center mt-12 w-full max-w-[1339px] max-md:mt-10 max-md:max-w-full">
                 <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Upload Product Image */}
+                    <div>
+                        <label className="block mb-2">Ảnh Sản Phẩm</label>
+                        <div className="flex items-center gap-4">
+                            {/* Preview Uploaded Image or File Input Button */}
+                            <div
+                                className="w-24 h-24 border border-gray-300 rounded-md flex justify-center items-center cursor-pointer relative"
+                                onClick={() => document.getElementById("fileInput")?.click()}
+                            >
+                                {/* If there is an image, show it as preview */}
+                                {image ? (
+                                    <img
+                                        src={image}
+                                        alt="Product"
+                                        className="w-full h-full object-cover rounded-md"
+                                    />
+                                ) : (
+                                    <span className="text-gray-500">Chọn ảnh</span>
+                                )}
+                                {/* Hidden file input */}
+                                <input
+                                    type="file"
+                                    id="fileInput"
+                                    accept="image/*"
+                                    onChange={handleImageUpload}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                />
+                            </div>
+                        </div>
+                    </div>
                     {/* Basic Product Information */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>

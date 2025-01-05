@@ -1,7 +1,7 @@
 import Header from '../../components/header'
 import { Footer } from '../../components/Footer';
 import AddProductForm from './addProduct';
-
+import AdminOrderManagement from '../userInfor/oderAdmin';
 const Shop = () => {
     return (
         <div>
@@ -12,7 +12,7 @@ const Shop = () => {
                         <h1 className="gap-2.5 p-2.5">Thêm Sản Phẩm Mới</h1>
                     </div>
                 </header>
-                <AddProductForm></AddProductForm>
+                <AdminOrderManagement></AdminOrderManagement>
             </main>
             <Footer></Footer>
         </div>

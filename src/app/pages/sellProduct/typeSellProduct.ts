@@ -7,6 +7,7 @@ export interface Product {
         id: number;
         name: string;
     };
+    image: string,
     description: string;
     createdAt: string;
     rate: number;
@@ -17,6 +18,10 @@ export interface Product {
         name: string;
     }>;
     status: boolean;
+    options: {
+        price: string,
+        salePrice: string,
+    }[]
 }
 
 export interface Category {

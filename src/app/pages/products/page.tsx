@@ -9,22 +9,29 @@ import { Policies } from '@/app/components/product/policies';
 import { Reviews } from '@/app/components/product/reviews';
 import { RelatedProducts } from '@/app/pages/products/related-products';
 import { Footer } from '@/app/components/Footer';
-import { BProduct, getProductByID, fetchGetProductCategory } from './product';
+import { BProduct, getProductByID, fetchGetProductCategory, fetchAddCart } from './product';
+import { RelatedProduct } from '@/app/components/RelatedProduct/relatedProduct';
+
 
 
 export default function ShopProduct() {
+    const idUser = sessionStorage.getItem('UserId')
+    const accessToken = sessionStorage.getItem('accessToken')
+    // console.log("Id User: ", accessToken)
+
     const [product, setProduct] = useState<BProduct | null>(null);
     const [selectedSize, setSelectedSize] = useState(null);
     const [quantity, setQuantity] = useState(1);
     const [isAdding, setIsAdding] = useState(false);
     const [hoveredRating, setHoveredRating] = useState(null);
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [relatedProduct, setRelatedProduct] = useState([]);
+    const [productId, setProductId] = useState<string | null>(null);
 
     const getProductIdFromURL = (): string | null => {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get('id');
-      };
+    };
+
+
 
     // const maxIndex = relatedProduct.length - 5; // Đảm bảo chỉ có 5 sản phẩm hiển thị
 
@@ -55,22 +62,29 @@ export default function ShopProduct() {
         setQuantity(quantity + 1);
     };
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
         // Check if any option has stock available
         const hasStockAvailable = product?.options?.some(option => option.stockQuantity > 0);
 
-        // If no options have stock, prevent adding to cart
         if (!hasStockAvailable) {
             alert("This product is currently out of stock.");
             return;
         }
 
-        // Proceed only if the selected size has stock
         if (!selectedSize?.stockQuantity || selectedSize.stockQuantity <= 0) {
             alert("Please select a size with available stock.");
             return;
         }
-
+        if (idUser !== null && accessToken !== null) {
+            if (selectedSize !== undefined && quantity !== undefined) {
+              const dataCart = await fetchAddCart(Number(idUser), accessToken, selectedSize, quantity);
+              console.log(dataCart);
+            } else {
+              console.error("selectedSize or quantity is undefined");
+            }
+          } else {
+            console.error("idUser or accessToken is null");
+          }
         setIsAdding(true);
 
         // Simulate adding to cart
@@ -83,22 +97,16 @@ export default function ShopProduct() {
             });
         }, 1000);
     };
+
+
     useEffect(() => {
         const productId = getProductIdFromURL();
+        setProductId(productId)
         const fetchData = async () => {
             try {
                 const fetchedProduct = await getProductByID(Number(productId)); // Replace with actual product ID
                 setProduct(fetchedProduct.data);
-
-                setSelectedSize(fetchedProduct.data.options); // Default size
-                console.log("size: ", product?.category.id);
-
-
-                // Fetch category information
-                const AsameCategory = await fetchGetProductCategory(fetchedProduct.data.category.id);
-                console.log("Category Info: ", AsameCategory.data);
-                setRelatedProduct(AsameCategory.data)
-                
+                setSelectedSize(fetchedProduct.data.options);
 
             } catch (error) {
                 console.error('Error fetching product data:', error);
@@ -107,24 +115,6 @@ export default function ShopProduct() {
 
         fetchData();
     }, []);
-    // useEffect(() => {
-    //     console.log("CBV: ", product)
-    //     if (!product == undefined) {
-    //         const fetchDataCategory = async () => {
-    //             try {
-    //                 const ASameCategory = await fetchGetProductCategory(product?.category.id);
-    //                 setSameCategory(ASameCategory);
-    //                 console.log("BBB: ", ASameCategory);
-    //                 console.log("CCC: ", SameCategory);
-    //             }
-    //             catch (e) {
-    //                 console.error('Error fetching product data:', e);
-    //             }
-    //         };
-    //         fetchDataCategory();
-    //     }
-
-    // }, [SameCategory]);
 
     if (!product) {
         return (
@@ -160,7 +150,7 @@ export default function ShopProduct() {
                                     {product.rate.toFixed(1)}
                                     <span className="sr-only"> out of 5 stars</span>
                                 </p>
-                                
+
                                 <div className="ml-1 flex items-center">
                                     {[0, 1, 2, 3, 4].map((rating) => (
                                         <div
@@ -211,12 +201,12 @@ export default function ShopProduct() {
 
                         <div>
                             <h3 className="text-lg font-semibold mb-2">Select Size</h3>
-                            {/* <RadioGroup
+                            <RadioGroup
                                 value={selectedSize}
                                 onChange={setSelectedSize}
                                 className="mt-2"
-                            > */}
-                                {/* <RadioGroup.Label className="sr-only">Choose a size</RadioGroup.Label>
+                            >
+                                <RadioGroup.Label className="sr-only">Choose a size</RadioGroup.Label>
                                 <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
                                     {product.options.map((size) => (
                                         <RadioGroup.Option
@@ -236,7 +226,7 @@ export default function ShopProduct() {
                                         </RadioGroup.Option>
                                     ))}
                                 </div>
-                            </RadioGroup> */}
+                            </RadioGroup>
 
                             <div className="mt-6 flex items-center justify-between">
                                 <div className="flex items-center space-x-4">
@@ -309,7 +299,7 @@ export default function ShopProduct() {
 
                 <div className="mt-12">
                     <h2 className="text-2xl font-bold">Related Products</h2>
-                    <RelatedProducts />
+                    {productId && <RelatedProduct productId={productId} />}
                 </div>
             </main>
             <Footer />
