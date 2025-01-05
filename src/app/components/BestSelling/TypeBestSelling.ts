@@ -16,7 +16,6 @@ export const fetchGetBestSelling = async () => {
             throw Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json()
-        // console.log("data top Selling: ", data)
         return data;
     } catch (e) {
         console.error('Error fetching category products:', e);
@@ -27,12 +26,14 @@ export const fetchProductInforList = async (list: Number[]) => {
     console.log("aaaaabbbccc: ",JSON.stringify({
         "list" : [3,2,1],
     }))
+    const body = { "list": [3,2,1]}
     try {
         const response = await fetch(ApiRoutes.Product_inforList, {
             method: "POST",
-            body: JSON.stringify({
-                "list" : [3,2,1],
-            })
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body)
         })
         if (!response.ok) {
             throw Error(`HTTP error! Status: ${response.status}`);

@@ -31,6 +31,9 @@ export const fetchProductInforList = async (list: Number[]) => {
     try {
         const response = await fetch(ApiRoutes.Product_inforList, {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify({
                 list,
             })

@@ -72,8 +72,8 @@ export function ProductCard({
             <div className="flex flex-col items-start self-start mt-4 text-base font-medium">
                 <h2 className="self-stretch text-black hover:text-red-500 transition-colors duration-300">{title}</h2>
                 <div className="flex gap-3 items-start mt-2 whitespace-nowrap">
-                    <span className="text-red-500" aria-label={`Current price: $${currentPrice}`}>${currentPrice}</span>
-                    <span className="text-black opacity-50" aria-label={`Original price: $${originalPrice}`}>${originalPrice}</span>
+                    {/* <span className="text-red-500" aria-label={`Current price: ${currentPrice}`}>${currentPrice}</span> */}
+                    <span className="text-black opacity-50" aria-label={`Original price: ${originalPrice}`}>{originalPrice} VNĐ</span>
                 </div>
                 <div className="flex gap-2 items-start mt-2 text-sm font-semibold text-black whitespace-nowrap">
                     <div className="flex mt-2" role="img" aria-label={`Rating: ${rating} out of 5 stars`}>

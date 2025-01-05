@@ -40,7 +40,7 @@ const Page = () => {
         sessionStorage.setItem('email', data.data.email);
         sessionStorage.setItem('avatar', data.data.avatar);
 
-        window.location.href = '/pages/sellProduct';
+        window.location.href = '/pages/shop';
 
         //remember me
         if (rememberMe) {

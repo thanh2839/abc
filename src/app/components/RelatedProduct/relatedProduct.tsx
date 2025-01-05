@@ -39,7 +39,8 @@ export const RelatedProduct: React.FC<RelatedProductProps> = ({ productId }) => 
 
     const bestSelling = async () => {
         try {
-            const data = await fetchGetRelatedProduct(productId)
+            console.log("BDC: ", productId)
+            const data = await fetchGetRelatedProduct(Number(productId))
             const productIds = data.map(item => item.productId);
             // console.log("Product IDs: ", productIds);
 
@@ -51,8 +52,7 @@ export const RelatedProduct: React.FC<RelatedProductProps> = ({ productId }) => 
                     id: product.id,
                     image: product.image || `https://cdn.builder.io/api/v1/image/assets/107937b03e68408b93e8f13d8a143773/e93ad05ae04f0b54f4159cbcf6911a27cb651cbe215adedef39517dbfe9650fd?apiKey=107937b03e68408b93e8f13d8a143773&`,
                     title: product.name,
-                    originalPrice: formatPrice(originalPrice),
-                    rating: product.rate,
+                    originalPrice: formatPrice(originalPrice === 0 ? 1000000 : originalPrice),                    rating: product.rate,
                     reviews: product.ratingCount,
                     imageAlt: product.imageAlt,
                 };

@@ -38,7 +38,6 @@ export function BestSellingProductComponents() {
         try {
             const data = await fetchGetBestSelling()
             const productIds = data.map(item => item.productId);
-            // console.log("Product IDs: ", productIds);
 
             // call data
             const dataProduct = await fetchProductInforList(productIds);

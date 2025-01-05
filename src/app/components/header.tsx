@@ -20,7 +20,12 @@ const Header = () => {
   // const Aavatar = sessionStorage.getItem('avatar') || 'https://res.cloudinary.com/dsymtu3j5/image/upload/v1735603112/jhwzpv1ktpvydjr6la7d.jpg';
   return (
     <header className="flex justify-between items-center px-4 py-8 w-full bg-white min-h-[100px]">
-      <h1 className="text-2xl font-bold text-stone-900 ml-11">SENTUARY</h1>
+      <a href="/pages/shop">
+        <h1 className="text-2xl font-bold text-stone-900 ml-11">
+          SENTUARY
+        </h1>
+      </a>
+
 
 
       <nav className="flex gap-10 items-center text-lg font-medium text-stone-900 text-opacity-50">
@@ -30,16 +35,16 @@ const Header = () => {
       </nav>
 
       <div className="flex gap-6 items-center mr-11">
-      {accessToken && (
-        <Link href="/pages/Cart">
-          <img
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/107937b03e68408b93e8f13d8a143773/e3336ab25626fe3b5c5abb853a09d644e965873a3f36238841e482a47f674aa1?apiKey=107937b03e68408b93e8f13d8a143773&"
-            alt="Cart"
-            className="w-6 h-6 object-contain"
-          />
-        </Link>
-      )}
+        {accessToken && (
+          <Link href="/pages/Cart">
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/107937b03e68408b93e8f13d8a143773/e3336ab25626fe3b5c5abb853a09d644e965873a3f36238841e482a47f674aa1?apiKey=107937b03e68408b93e8f13d8a143773&"
+              alt="Cart"
+              className="w-6 h-6 object-contain"
+            />
+          </Link>
+        )}
 
         {!accessToken && (
           <Link href="/pages/login">

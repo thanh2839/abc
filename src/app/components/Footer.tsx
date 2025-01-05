@@ -47,7 +47,7 @@ export const Footer: React.FC = () => {
         </nav>
       </div>
       <div className="self-start mt-24 text-lg font-medium text-stone-900 text-opacity-50 max-md:mt-10 max-md:max-w-full">
-        2023 all Right Reserved Term of use GREENMIND
+        2023 all Right Reserved Term of use 
       </div>
     </footer>
   );
