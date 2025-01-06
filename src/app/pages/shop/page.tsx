@@ -7,6 +7,8 @@ import { RecommentHybridSection } from '@/app/components/RecommentShop/Recommend
 import { BestSellingProductComponents } from '@/app/components/BestSelling/BestSelling';
 import { BrowseCategories } from '@/app/components/CategoryShopComponents/BrowseCategory';
 import { TopNewProductComponents } from '@/app/components/TopNewProduct/topNewProduct';
+import { RecommentMemberTagsSection } from '@/app/components/RecommentShopTag/RecommendMemberTag';
+
 const Shop = () => {
     return (
         <div>
@@ -14,6 +16,8 @@ const Shop = () => {
             <hr className="border-t border-gray-300 my-4" /> {/* Horizontal line */}
             <br></br>
             <MainHero></MainHero>
+            <div className="h-[50px]"></div>
+                <RecommentMemberTagsSection></RecommentMemberTagsSection>
             <div className="h-[50px]"></div>
             {/* <div className="flex justify-center"> */}
                 <RecommentHybridSection />
