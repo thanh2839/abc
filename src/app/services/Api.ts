@@ -67,7 +67,7 @@ const ApiRoutes = {
     createOrder: (id: number) => `${API}/api/order/create/${id}`,
     getOrderInfor: (orderId : number, userId: number) => `${API}/api/order/get-order/${userId}?orderId=${orderId}`,
     getOderList: (userId: number) => `${API}/api/order/get-orders/${userId}`,
-    getOderByAdmin: (status: string, from : string, to : string) => `${API}/api/order/get-all-orders?status=${status}&from${from}&to${to}`,
+    getOderByAdmin: (status: string, from : string, to : string) => `${API}/api/order/get-all-orders?status=${status}&from=${from}&to=${to}`,
     UpdateOderByAdmin : (oderId : string, status: string) => `${API}/api/order/update-status?orderId=${oderId}&status=${status}`,
 
 };

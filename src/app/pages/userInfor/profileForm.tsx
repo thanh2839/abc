@@ -143,7 +143,7 @@ export function ProfileForm() {
         <Card className="flex-1 ml-5 max-w-4xl">
             <CardHeader>
                 <CardTitle className="text-xl font-medium text-red-500">
-                    Edit Your Profile
+                    Thay đổi thông tin
                 </CardTitle>
             </CardHeader>
             <CardContent>

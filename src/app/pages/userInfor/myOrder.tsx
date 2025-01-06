@@ -10,19 +10,32 @@ const accessToken = sessionStorage.getItem('accessToken');
 
 interface Order {
     id: number;
-    status: 'PENDING' | 'PAYMENT_PENDING' | 'PAID' | 'SHIPPING_PENDING' | 'SHIPPED' |'DELIVERED' | 'COMPLETED' | 'CANCELLED';
+    status: 'PENDING' | 'PAYMENT_PENDING' | 'PAID' | 'SHIPPING_PENDING' | 'SHIPPED' | 'DELIVERED' | 'COMPLETED' | 'CANCELLED';
     address: string;
     totalPrice: string;
     createdAt: string;
 }
 
+interface Product {
+    id: number;
+    name: string;
+    image: string;
+    categoryId: number;
+    createdAt: string;
+    deleted: string | null;
+    description: string | null;
+    rate: number;
+    ratingCount: number;
+    sold: number;
+    status: boolean;
+}
+
 interface ProductOption {
     id: number;
-    image: string;
     name: string;
+    image: string;
     price: string;
-    salePrice: string;
-    stockQuantity: number;
+    product: Product;
 }
 
 interface OrderDetails {
@@ -43,7 +56,8 @@ const MyOrder = () => {
             try {
                 if (userId && accessToken) {
                     const data = await getOrderList(Number(userId), accessToken);
-                    const orderData : Order [] = data.map(order => ({
+                    console.log("data cbd: ", data)
+                    const orderData: Order[] = data.map(order => ({
                         id: order.id,
                         status: order.status,
                         address: order.address,
@@ -52,12 +66,12 @@ const MyOrder = () => {
                     }))
                     setOrders(orderData);
                 }
-            }  catch(e) {
+            } catch (e) {
                 console.error('Error fetching order list:', e);
             }
         }
         fetchOrderList()
-    },[])
+    }, [])
     // const orders: Order[] = [
     //     {
     //         id: 101,
@@ -187,12 +201,13 @@ const MyOrder = () => {
                                                     <div key={detail.productOptionId} className="flex items-center justify-between p-3 bg-white rounded-lg">
                                                         <div className="flex items-center gap-3">
                                                             <img
-                                                                src={detail.productOption.image}
+                                                                src={detail.productOption.product.image}
                                                                 alt={detail.productOption.name}
                                                                 className="w-16 h-16 object-cover rounded"
                                                             />
                                                             <div>
-                                                                <div className="font-medium">{detail.productOption.name}</div>
+                                                                <div className="font-medium">{detail.productOption.product.name}</div>
+                                                                <div className="text-sm text-gray-600">Loại sản phẩm: {detail.productOption.name}</div>
                                                                 <div className="text-sm text-gray-600">Số lượng: {detail.quantity}</div>
                                                             </div>
                                                         </div>

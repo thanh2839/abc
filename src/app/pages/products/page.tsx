@@ -77,14 +77,14 @@ export default function ShopProduct() {
         }
         if (idUser !== null && accessToken !== null) {
             if (selectedSize !== undefined && quantity !== undefined) {
-              const dataCart = await fetchAddCart(Number(idUser), accessToken, selectedSize, quantity);
-              console.log(dataCart);
+                const dataCart = await fetchAddCart(Number(idUser), accessToken, selectedSize, quantity);
+                console.log(dataCart);
             } else {
-              console.error("selectedSize or quantity is undefined");
+                console.error("selectedSize or quantity is undefined");
             }
-          } else {
+        } else {
             console.error("idUser or accessToken is null");
-          }
+        }
         setIsAdding(true);
 
         // Simulate adding to cart
@@ -107,6 +107,7 @@ export default function ShopProduct() {
                 const fetchedProduct = await getProductByID(Number(productId)); // Replace with actual product ID
                 setProduct(fetchedProduct.data);
                 setSelectedSize(fetchedProduct.data.options);
+
 
             } catch (error) {
                 console.error('Error fetching product data:', error);
@@ -133,8 +134,30 @@ export default function ShopProduct() {
             <Header />
             <main className="px-4 sm:px-8 md:px-16 lg:px-32 py-8">
                 <div className="flex flex-col md:flex-row gap-8">
-                    <div className="md:w-1/2">
-                        <ImageGallery />
+                    <div className="flex flex-col">
+                        <div className="relative">
+                            <div className="aspect-w-3 aspect-h-4 rounded-lg bg-gray-100 overflow-hidden">
+                                <img
+                                    src={product.image}
+                                    alt={product.name}
+                                    className="w-full h-full object-center object-cover"
+                                />
+                            </div>
+                            {/* <div className="absolute top-1/2 transform -translate-y-1/2 flex justify-between w-full px-4">
+                                <button
+                                    onClick={() => setActiveImageIndex(Math.max(0, activeImageIndex - 1))}
+                                    className="p-2 rounded-full bg-white shadow-lg hover:bg-gray-100 transition-colors"
+                                >
+                                    <ChevronLeft className="w-6 h-6" />
+                                </button>
+                                <button
+                                    onClick={() => setActiveImageIndex(Math.min((product.images?.length || 1) - 1, activeImageIndex + 1))}
+                                    className="p-2 rounded-full bg-white shadow-lg hover:bg-gray-100 transition-colors"
+                                >
+                                    <ChevronRight className="w-6 h-6" />
+                                </button>
+                            </div> */}
+                        </div>
                     </div>
 
                     <div className="md:w-1/2 flex flex-col gap-6">

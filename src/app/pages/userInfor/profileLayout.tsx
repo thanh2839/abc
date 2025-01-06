@@ -5,6 +5,11 @@ import { ChevronRight, User, MapPin, CreditCard, PackageOpen, XCircle, Heart } f
 import MyOrder from "./myOrder";
 import AdminOrderManagement from "./oderAdmin";
 import AdminOrderManagementACopy from "./oderAdmin copy";
+import AddProductForm from '../add-Product/addProduct';
+import GetupdateProduct from '../updateProduct/updateProduct';
+// import ManageProfile from "./manageProfile"; // Assuming you have a ManageProfile component
+// import AddProduct from "./addProduct"; // Assuming you have an AddProduct component
+// import UpdateProduct from "./updateProduct"; // Assuming you have an UpdateProduct component
 
 interface NavigationItem {
   label: string;
@@ -21,20 +26,18 @@ interface SidebarSection {
 
 const sidebarSections: SidebarSection[] = [
   {
-    title: "Manage My Account",
+    title: "Quản lý tài khoản",
     icon: <User className="w-5 h-5" />,
     items: [
-      { label: "My Profile", isActive: true, icon: <User className="w-4 h-4" /> },
-      { label: "Address Book", opacity: "50", icon: <MapPin className="w-4 h-4" /> },
-      { label: "My Payment Options", opacity: "50", icon: <CreditCard className="w-4 h-4" /> }
+      { label: "Thông tin của tôi", isActive: true, icon: <User className="w-4 h-4" /> },
     ]
   },
   {
     title: "My Orders",
     icon: <PackageOpen className="w-5 h-5" />,
     items: [
-      { label: "My Returns", opacity: "50", icon: <PackageOpen className="w-4 h-4" /> },
-      { label: "My Cancellations", opacity: "50", icon: <XCircle className="w-4 h-4" /> }
+      { label: "Đơn hàng của tôi", opacity: "50", icon: <PackageOpen className="w-4 h-4" /> },
+      // { label: "My Cancellations", opacity: "50", icon: <XCircle className="w-4 h-4" /> }
     ]
   },
   {
@@ -44,13 +47,40 @@ const sidebarSections: SidebarSection[] = [
   }
 ];
 
+// Additional items for admin role
+const adminSidebarSections: SidebarSection[] = [
+  {
+    title: "Quản lý tài khoản",
+    icon: <User className="w-5 h-5" />,
+    items: [
+      { label: "Thông tin của tôi", icon: <User className="w-4 h-4" /> },
+      // { label: "Manage Profile", icon: <User className="w-4 h-4" /> },
+      { label: "Quản lý", icon: <User className="w-4 h-4" /> },
+      { label: "Thêm sản phẩm", icon: <PackageOpen className="w-4 h-4" /> },
+      { label: "Sửa sản phẩm", icon: <PackageOpen className="w-4 h-4" /> },
+    ]
+  },
+  {
+    title: "Đơn hàng",
+    icon: <PackageOpen className="w-5 h-5" />,
+    items: [
+      { label: "Quản lý đơn hàng", icon: <PackageOpen className="w-4 h-4" /> },
+      { label: "Order Returns", icon: <PackageOpen className="w-4 h-4" /> }
+    ]
+  }
+];
+
 export function ProfileLayout() {
+  const role = sessionStorage.getItem('role');
+  console.log(role);
   const [activePage, setActivePage] = React.useState<string>("profile"); // State to track the active page
 
   // Function to handle the navigation of the sidebar
   const handleNavigation = (page: string) => {
     setActivePage(page); // Update the active page when a link is clicked
   };
+
+  const sections = role === 'ADMIN' ? adminSidebarSections : sidebarSections;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -65,7 +95,7 @@ export function ProfileLayout() {
         <div className="flex gap-8 max-md:flex-col">
           <aside className="w-64 flex-shrink-0 max-md:w-full" role="complementary">
             <nav className="bg-white rounded-lg shadow-sm p-6" aria-label="Account navigation">
-              {sidebarSections.map((section, index) => (
+              {sections.map((section, index) => (
                 <div key={index} className={`${index > 0 ? 'mt-8' : ''}`}>
                   <div className="flex items-center space-x-2 text-gray-900">
                     {section.icon}
@@ -97,8 +127,14 @@ export function ProfileLayout() {
 
           <div className="flex-1">
             <div className="bg-white rounded-lg shadow-sm p-6">
-              {/* Conditionally render the ProfileForm or MyOrder based on the active page */}
+              {/* Conditionally render different components based on the active page */}
               {activePage === "My Profile" && <ProfileForm />}
+              {/* {activePage === "Manage Profile" && <ManageProfile />} */}
+              {/* {activePage === "Employees" && <ManageProfile />}  */}
+              {activePage === "Thêm sản phẩm" && <AddProductForm />}
+              {activePage === "Sửa sản phẩm" && <GetupdateProduct />}
+              {activePage === "Quản lý đơn hàng" && <AdminOrderManagement />}
+              {activePage === "Order Returns" && <AdminOrderManagementACopy />}
               {activePage === "My Returns" && <MyOrder />}
               {activePage === "My Cancellations" && <AdminOrderManagementACopy />}
             </div>

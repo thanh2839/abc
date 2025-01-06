@@ -105,7 +105,7 @@ export const getOrderInfor = async (idOrder: number, idUser: number, accessToken
             throw new Error(`HTTP error! Status: ${response}`);
         }
         const data = await response.json()
-        // console.log("Data Order Detail : ", data.data[0].orderDetails)
+        console.log("Data Order Detail : ", data.data[0].orderDetails)
         return data.data[0].orderDetails
     }
     catch (e) {
@@ -136,6 +136,7 @@ export const getOrderList = async (userId: number, accessToken: string) => {
 }
 
 export const getOderAdmin = async (accessToken: string, status: string, from: string, to: string) => {
+    console.log("API: ", ApiRoutes.getOderByAdmin(status, from, to))
     try {
         const response = await fetch(ApiRoutes.getOderByAdmin(status, from, to), {
             method: 'POST',
