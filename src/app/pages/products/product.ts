@@ -130,3 +130,25 @@ export const fetchAddCart = async (id: number, accessToken: string, selectedSize
   }
 }
 
+export const interact = async(id: string, accessToken: string, body : {productId: number, rating: number, comment: string}) => {
+  try {
+    const response = await fetch(ApiRoutes.interact(id), {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      },
+      body: JSON.stringify(body),
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Product added to cart:", data.data);
+  }
+  catch (e) {
+    console.error("Error fetching product:", e);
+    throw e;
+  }
+}

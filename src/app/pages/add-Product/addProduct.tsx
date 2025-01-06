@@ -6,9 +6,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Product, Category, Tag, fetchCategories, fetchTag, createTagAPI } from './typeAddProduct';
-import ApiRoutes from '@/app/services/Api';
-import { error } from 'console';
+import { Product, Category, Tag, fetchCategories, fetchTag, createTagAPI, createProduct } from './typeAddProduct';
+import { access } from 'fs';
+
 
 const AddProductForm = () => {
   const [product, setProduct] = useState<Product>({
@@ -22,6 +22,7 @@ const AddProductForm = () => {
   const [category, setCategories] = useState<Category[]>([]);
   const [tag, setTag] = useState<Tag[]>([]);
   const [image, setImage] = useState<string | null>(null);
+  const accessToken = sessionStorage.getItem('accessToken')
 
 
   //search tag
@@ -117,11 +118,18 @@ const AddProductForm = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Validate form data
     console.log('Product to be submitted:', product);
     // TODO: Add API call to submit product
+    if (!accessToken) { return }
+    try {
+      const response = await createProduct(product, accessToken)
+      console.log(response)
+    }catch (e) {
+      console.log(e)
+    }
   };
 
   //call Api create Tag
@@ -193,7 +201,7 @@ const AddProductForm = () => {
                 </div>
 
                 <Button variant="outline" className="h-10" onClick={handleClick}>
-                  Change Photo
+                  Đổi ảnh
                 </Button>
                 <input
                   id="avatarInput"

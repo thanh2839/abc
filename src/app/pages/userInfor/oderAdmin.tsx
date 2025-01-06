@@ -5,14 +5,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { 
-    Package, 
-    Search, 
-    Loader2, 
-    CalendarDays, 
-    MapPin, 
-    Clock, 
-    CreditCard, 
+import {
+    Package,
+    Search,
+    Loader2,
+    CalendarDays,
+    MapPin,
+    Clock,
+    CreditCard,
     Truck,
     Calendar,
     User,
@@ -23,7 +23,10 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 
-import { getOderAdmin, UpdateOderByAdmin, fetchGetAllPayment, fetchGetAllShipping } from './UserInfor';
+import { getOderAdmin, UpdateOderByAdmin, fetchGetAllPayment, fetchGetAllShipping, addPaymentMethod, addShippingMethod } from './UserInfor';
+import { Plus, Trash } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 
 
@@ -73,6 +76,10 @@ const AdminOrderManagement = () => {
     const [newPaymentMethod, setNewPaymentMethod] = useState('');
     const [showShippingDialog, setShowShippingDialog] = useState(false);
     const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+    const [cost, setCost] = useState(0);
+    const [estimatedShipping, setEstimatedShipping] = useState(0);
+    const [isInner, setIsInner] = useState(false);
+
 
     useEffect(() => {
         fetchOrders()
@@ -110,6 +117,7 @@ const AdminOrderManagement = () => {
         try {
             const response = await fetchGetAllPayment(accessToken);
             setPaymentMethods(response);
+            console.log("Payment: ", response)
         } catch (error) {
             console.error('Error fetching payment methods:', error);
         }
@@ -188,6 +196,36 @@ const AdminOrderManagement = () => {
         return statusFlow[currentStatus];
     };
 
+    const handleAddPaymentMethod = async () => {
+        if (!accessToken) { return }
+        try {
+            const list: string[] = []
+            list.push(newPaymentMethod)
+            const response = await addPaymentMethod(accessToken, list)
+            console.log(response)
+        }
+        catch (e) {
+            console.log(e)
+        }
+    }
+
+    const handleAddShippingMethod = async () => {
+        if (!accessToken) { return }
+        try {
+            const shippingMethod = [{
+                name: newShippingUnit,
+                cost: cost,
+                estimatedShipping: estimatedShipping,
+                isInner: isInner
+            }]
+            const response = await addShippingMethod(accessToken, shippingMethod)
+            console.log(response)
+        }
+        catch (e) {
+            console.log(e)
+        }
+    }
+
     return (
         <div className="p-6 space-y-6">
             <Card className="max-w-7xl mx-auto">
@@ -200,31 +238,117 @@ const AdminOrderManagement = () => {
                         <div className="flex gap-2">
                             <Dialog open={showShippingDialog} onOpenChange={setShowShippingDialog}>
                                 <DialogTrigger asChild>
-                                    <Button variant="outline">
-                                        <Truck className="h-4 w-4 mr-2" />
+                                    <Button variant="outline" className="gap-2">
+                                        <Truck className="h-4 w-4" />
                                         Quản lý vận chuyển
                                     </Button>
                                 </DialogTrigger>
-                                <DialogContent>
+
+                                <DialogContent className="max-w-2xl">
                                     <DialogHeader>
                                         <DialogTitle>Quản lý đơn vị vận chuyển</DialogTitle>
                                     </DialogHeader>
+
                                     <div className="space-y-4">
-                                        <div className="flex gap-2">
-                                            <Input
-                                                placeholder="Tên đơn vị vận chuyển mới"
-                                                value={newShippingUnit}
-                                                onChange={(e) => setNewShippingUnit(e.target.value)}
-                                            />
-                                            <Button onClick={() => {/* Add shipping unit logic */ }}>Thêm</Button>
-                                        </div>
-                                        <div className="space-y-2">
-                                            {shippingUnits.map((unit) => (
-                                                <div key={unit.id} className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                                                    <span>{unit.name}</span>
-                                                    <Button variant="ghost" size="sm">Xóa</Button>
+                                        {/* Add New Shipping Unit Form - Fixed at top */}
+                                        <Card className="p-4">
+                                            <div className="space-y-4">
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div className="space-y-2">
+                                                        <Label htmlFor="shipping-name">Tên đơn vị vận chuyển</Label>
+                                                        <Input
+                                                            id="shipping-name"
+                                                            placeholder="VD: Giao hàng nhanh"
+                                                            value={newShippingUnit}
+                                                            onChange={(e) => setNewShippingUnit(e.target.value)}
+                                                        />
+                                                    </div>
+
+                                                    <div className="space-y-2">
+                                                        <Label htmlFor="shipping-cost">Chi phí vận chuyển (VNĐ)</Label>
+                                                        <Input
+                                                            id="shipping-cost"
+                                                            type="number"
+                                                            placeholder="VD: 30000"
+                                                            value={cost}
+                                                            onChange={(e) => setCost(Number(e.target.value))}
+                                                        />
+                                                    </div>
                                                 </div>
-                                            ))}
+
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div className="space-y-2">
+                                                        <Label htmlFor="estimated-time">Thời gian ước tính (ngày)</Label>
+                                                        <Input
+                                                            id="estimated-time"
+                                                            type="number"
+                                                            placeholder="VD: 3"
+                                                            value={estimatedShipping}
+                                                            onChange={(e) => setEstimatedShipping(Number(e.target.value))}
+                                                        />
+                                                    </div>
+
+                                                    <div className="flex items-center space-x-2 pt-8">
+                                                        <Checkbox
+                                                            id="shipping-type"
+                                                            checked={isInner}
+                                                            onCheckedChange={(checked) => setIsInner(checked as boolean)}
+                                                        />
+                                                        <Label htmlFor="shipping-type">Vận chuyển nội địa</Label>
+                                                    </div>
+                                                </div>
+
+                                                <Button
+                                                    onClick={handleAddShippingMethod}
+                                                    className="w-full gap-2"
+                                                >
+                                                    <Plus className="h-4 w-4" />
+                                                    Thêm đơn vị vận chuyển
+                                                </Button>
+                                            </div>
+                                        </Card>
+
+                                        {/* Shipping Units List - Scrollable */}
+                                        <div>
+                                            <h3 className="font-medium text-sm text-gray-700 mb-2">Danh sách đơn vị vận chuyển</h3>
+
+                                            <div className="overflow-y-auto max-h-[300px] pr-2">
+                                                <div className="space-y-2">
+                                                    {shippingUnits.length > 0 ? (
+                                                        shippingUnits.map((unit) => (
+                                                            <div
+                                                                key={unit.id}
+                                                                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                                                            >
+                                                                <div className="flex flex-col">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <Truck className="h-4 w-4 text-gray-500" />
+                                                                        <span className="font-medium">{unit.name}</span>
+                                                                    </div>
+                                                                    <div className="text-sm text-gray-500 space-x-3 mt-1">
+                                                                        {/* <span>{unit.cost.toLocaleString()}đ</span>
+                                                                        <span>•</span>
+                                                                        <span>{unit.estimatedDays} ngày</span>
+                                                                        <span>•</span>
+                                                                        <span>{unit.isInner ? 'Nội địa' : 'Quốc tế'}</span> */}
+                                                                    </div>
+                                                                </div>
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="sm"
+                                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                                >
+                                                                    <Trash className="h-4 w-4" />
+                                                                </Button>
+                                                            </div>
+                                                        ))
+                                                    ) : (
+                                                        <div className="text-center py-6 text-gray-500">
+                                                            Chưa có đơn vị vận chuyển nào
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </DialogContent>
@@ -232,31 +356,77 @@ const AdminOrderManagement = () => {
 
                             <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
                                 <DialogTrigger asChild>
-                                    <Button variant="outline">
-                                        <CreditCard className="h-4 w-4 mr-2" />
+                                    <Button variant="outline" className="gap-2">
+                                        <CreditCard className="h-4 w-4" />
                                         Quản lý thanh toán
                                     </Button>
                                 </DialogTrigger>
-                                <DialogContent>
+
+                                <DialogContent className="max-w-xl">
                                     <DialogHeader>
                                         <DialogTitle>Quản lý phương thức thanh toán</DialogTitle>
                                     </DialogHeader>
+
                                     <div className="space-y-4">
-                                        <div className="flex gap-2">
-                                            <Input
-                                                placeholder="Tên phương thức thanh toán mới"
-                                                value={newPaymentMethod}
-                                                onChange={(e) => setNewPaymentMethod(e.target.value)}
-                                            />
-                                            <Button onClick={() => {/* Add payment method logic */ }}>Thêm</Button>
-                                        </div>
-                                        <div className="space-y-2">
-                                            {paymentMethods.map((method) => (
-                                                <div key={method.id} className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                                                    <span>{method.name}</span>
-                                                    <Button variant="ghost" size="sm">Xóa</Button>
+                                        {/* Add New Payment Method Form - Fixed at top */}
+                                        <Card className="p-4">
+                                            <div className="space-y-4">
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="payment-method">Tên phương thức thanh toán</Label>
+                                                    <div className="flex gap-3">
+                                                        <Input
+                                                            id="payment-method"
+                                                            placeholder="VD: Thanh toán khi nhận hàng"
+                                                            value={newPaymentMethod}
+                                                            onChange={(e) => setNewPaymentMethod(e.target.value)}
+                                                            className="flex-1"
+                                                        />
+                                                        <Button
+                                                            onClick={handleAddPaymentMethod}
+                                                            className="gap-2"
+                                                        >
+                                                            <Plus className="h-4 w-4" />
+                                                            Thêm
+                                                        </Button>
+                                                    </div>
                                                 </div>
-                                            ))}
+                                            </div>
+                                        </Card>
+
+                                        {/* Payment Methods List - Scrollable */}
+                                        <div>
+                                            <h3 className="font-medium text-sm text-gray-700 mb-2">
+                                                Danh sách phương thức thanh toán
+                                            </h3>
+
+                                            <div className="overflow-y-auto max-h-[300px] pr-2">
+                                                <div className="space-y-2">
+                                                    {paymentMethods.length > 0 ? (
+                                                        paymentMethods.map((method) => (
+                                                            <div
+                                                                key={method.id}
+                                                                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                                                            >
+                                                                <div className="flex items-center gap-3">
+                                                                    <CreditCard className="h-4 w-4 text-gray-500" />
+                                                                    <span className="font-medium">{method.name}</span>
+                                                                </div>
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="sm"
+                                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                                >
+                                                                    <Trash className="h-4 w-4" />
+                                                                </Button>
+                                                            </div>
+                                                        ))
+                                                    ) : (
+                                                        <div className="text-center py-6 text-gray-500">
+                                                            Chưa có phương thức thanh toán nào
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </DialogContent>
@@ -266,7 +436,7 @@ const AdminOrderManagement = () => {
                 </CardHeader>
 
                 <CardContent>
-                <div className="space-y-6">
+                    <div className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end bg-white p-6 rounded-lg shadow-sm">
                             <div>
                                 <label className="text-sm font-medium text-gray-700 mb-2 block">Từ ngày</label>
@@ -309,8 +479,8 @@ const AdminOrderManagement = () => {
                                 </Select>
                             </div>
                             <div className="flex justify-end">
-                                <Button 
-                                    onClick={fetchOrders} 
+                                <Button
+                                    onClick={fetchOrders}
                                     className="w-full md:w-32 bg-red-600 hover:bg-red-700"
                                 >
                                     {isLoading ? (
@@ -395,7 +565,7 @@ const AdminOrderManagement = () => {
                                                         </p>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div className="space-y-4">
                                                     <div className="flex items-center gap-2 text-lg font-semibold text-gray-900">
                                                         <Calendar className="h-5 w-5 text-red-600" />
@@ -411,7 +581,7 @@ const AdminOrderManagement = () => {
                                                             <span className="font-medium">Cập nhật:</span> {formatDate(order.updatedAt)}
                                                         </p>
                                                         <p className="flex items-center gap-2">
-                                                            <DollarSign className="h-4 w-4"/>
+                                                            <DollarSign className="h-4 w-4" />
                                                             <span className="font-medium">Thanh toán:</span> {formatDate(order.paymentDate)}
                                                         </p>
                                                         <p className="flex items-center gap-2">

@@ -5,14 +5,10 @@ import { FooterLinkSection } from "./FooterLinkSection";
 const footerSections = [
   {
     title: "Information",
-    links: ["About", "Product", "Blog"]
+    links: ["Về chúng tôi", "Sản phẩm", "Blog"]
   },
   {
-    title: "Company",
-    links: ["Community", "Career", "Our story"]
-  },
-  {
-    title: "Contact",
+    title: "Liên hệ",
     links: ["Getting Started", "Pricing", "Resources"]
   }
 ];
@@ -29,9 +25,9 @@ export const Footer: React.FC = () => {
       <div className="flex flex-wrap gap-5 justify-between self-center w-full max-w-[1248px] max-md:max-w-full">
         <div className="flex flex-col items-center">
           <div className="flex flex-col max-w-full text-lg w-[189px]">
-            <div className="text-black">GREENMIND</div>
+            <div className="text-black">Santuary</div>
             <div className="mt-6 font-medium text-stone-900 text-opacity-50">
-              We help you find your dream plant
+              Tạp hóa bán mọi thứ
             </div>
           </div>
           <div className="flex gap-6 items-center mt-6">
@@ -46,9 +42,9 @@ export const Footer: React.FC = () => {
           ))}
         </nav>
       </div>
-      <div className="self-start mt-24 text-lg font-medium text-stone-900 text-opacity-50 max-md:mt-10 max-md:max-w-full">
+      {/* <div className="self-start mt-24 text-lg font-medium text-stone-900 text-opacity-50 max-md:mt-10 max-md:max-w-full">
         2023 all Right Reserved Term of use 
-      </div>
+      </div> */}
     </footer>
   );
 };

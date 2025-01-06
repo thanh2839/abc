@@ -96,8 +96,6 @@ export const policies = [
   },
 ];
 export const reviews = {
-  average: 3.9,
-  totalCount: 512,
   featured: [
     {
       id: 1,

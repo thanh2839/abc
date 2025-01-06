@@ -23,11 +23,12 @@ import { X } from 'lucide-react'
 interface RegisterFormProps {
   onSubmit: (username: String, password: String, fullname: String, email: String, gender: string, date: Date | undefined, memberTag: number[]) => void;
   passwordError: string;
+  onSwitchToLogin: () => void;
   setPasswordError: (error: string) => void;
   // setPasswordError2: (error: string) => void;
 }
 
-const RegisterForm = ({ onSubmit, passwordError, setPasswordError }: RegisterFormProps) => {
+const RegisterForm = ({ onSubmit, passwordError, setPasswordError, onSwitchToLogin }: RegisterFormProps) => {
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [fullname, setFullName] = useState('');
@@ -83,7 +84,9 @@ const RegisterForm = ({ onSubmit, passwordError, setPasswordError }: RegisterFor
 
   const handleSubmit = () => {
 
-      onSubmit(username, password, fullname, email, gender, date, memberTag);
+    onSubmit(username, password, fullname, email, gender, date, memberTag);
+
+    onSwitchToLogin();
   };
 
   return (
@@ -93,7 +96,7 @@ const RegisterForm = ({ onSubmit, passwordError, setPasswordError }: RegisterFor
         <div className="space-y-4">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name
+              Tên
             </label>
             <input
               type="text"
@@ -109,7 +112,7 @@ const RegisterForm = ({ onSubmit, passwordError, setPasswordError }: RegisterFor
 
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-              Username
+              Tên đăng nhập
             </label>
             <input
               type="text"
@@ -123,7 +126,7 @@ const RegisterForm = ({ onSubmit, passwordError, setPasswordError }: RegisterFor
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              Password
+              Mật khẩu
             </label>
             <input
               type="password"
@@ -149,7 +152,7 @@ const RegisterForm = ({ onSubmit, passwordError, setPasswordError }: RegisterFor
           </div>
           <div>
             <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-              Confirm Password
+              Nhập lại mật khẩu
             </label>
             <input
               type="password"
@@ -175,7 +178,7 @@ const RegisterForm = ({ onSubmit, passwordError, setPasswordError }: RegisterFor
         <div className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email Address
+              Email
             </label>
             <input
               type="email"
@@ -190,7 +193,7 @@ const RegisterForm = ({ onSubmit, passwordError, setPasswordError }: RegisterFor
 
           <div>
             <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">
-              Gender
+              Giới tính
             </label>
             <select
               id="gender"
@@ -199,15 +202,15 @@ const RegisterForm = ({ onSubmit, passwordError, setPasswordError }: RegisterFor
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50"
             >
               <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
+              <option value="Male">Nam</option>
+              <option value="Female">Nữ</option>
+              <option value="Other">Other</option>
             </select>
           </div>
 
           <div>
             <label htmlFor="dob" className="block text-sm font-medium text-gray-700 mb-1">
-              Date of Birth
+              Ngày sinh
             </label>
             <Popover>
               <PopoverTrigger asChild>
@@ -220,7 +223,7 @@ const RegisterForm = ({ onSubmit, passwordError, setPasswordError }: RegisterFor
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP") : <span>Pick a date</span>}
+                  {date ? format(date, "PPP") : <span>chọn ngày sinh</span>}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -337,7 +340,7 @@ const RegisterForm = ({ onSubmit, passwordError, setPasswordError }: RegisterFor
                     >
                       <div className="flex items-center gap-2">
                         {tag.name}
-                        {isSelected }
+                        {isSelected}
                       </div>
                     </SelectItem>
                   );
@@ -377,7 +380,7 @@ const RegisterForm = ({ onSubmit, passwordError, setPasswordError }: RegisterFor
           onClick={handleSubmit}
           className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-200 font-medium"
         >
-          Register
+        Đăng ký
         </button>
       </div>
     </form>

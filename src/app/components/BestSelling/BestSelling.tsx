@@ -75,7 +75,7 @@ export function BestSellingProductComponents() {
                             id="flash-sales-title"
                             className="text-4xl font-semibold tracking-widest leading-none text-black"
                         >
-                            Best Selling Product
+                            Sản phẩm bán chạy
                         </h1>
                         {/* Move Next Button next to Flash Sales */}
                         <div className="flex gap-2 items-center">
@@ -107,13 +107,13 @@ export function BestSellingProductComponents() {
                             </button>
                         </div>
                     </div>
-                    <div className="flex gap-2 items-center ml-auto">
+                    {/* <div className="flex gap-2 items-center ml-auto">
                         <button
                             className="ml-10 text-base font-medium bg-red-500 rounded text-neutral-50 py-2 px-6 max-md:px-4 max-md:text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 hover:bg-red-600 transition-colors"
                         >
                             View All Products
                         </button>
-                    </div>
+                    </div> */}
                 </header>
                 <div className="flex overflow-x-auto gap-8 items-start mt-10 w-full max-md:max-w-full">
                     {visibleProducts.map((product) => (

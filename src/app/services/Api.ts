@@ -21,7 +21,7 @@ const ApiRoutes = {
 
     // Product
     Product_create: `${API}/api/product/create`,
-    Product_update: (id: number) => `${API}/api/product/update/${id}`,
+    Product_update: (id: number) => `${API}/api/product/update/id?productId=${id}`,
     Product_infor: (id: number) => `${API}/api/product/info/id?productId=${id}`,
     Product_inforList: `${API}/api/product/info/list`,
     Product_InforCategory: (id: number) => `${API}/api/product/info/category?categoryId=${id}`,
@@ -69,7 +69,9 @@ const ApiRoutes = {
     getOderList: (userId: number) => `${API}/api/order/get-orders/${userId}`,
     getOderByAdmin: (status: string, from : string, to : string) => `${API}/api/order/get-all-orders?status=${status}&from=${from}&to=${to}`,
     UpdateOderByAdmin : (oderId : string, status: string) => `${API}/api/order/update-status?orderId=${oderId}&status=${status}`,
-
+    
+    //Đánh giá 
+    interact: (id: string) => `${API}/api/interact/rating/${id}`
 };
 
 export default ApiRoutes;

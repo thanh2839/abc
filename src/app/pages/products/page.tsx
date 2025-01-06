@@ -208,14 +208,14 @@ export default function ShopProduct() {
                                         href="#"
                                         className="text-sm font-medium text-slate-600 hover:text-slate-500 transition-colors duration-200"
                                     >
-                                        See all {product.ratingCount || 0} reviews
+                                        Đã có {product.ratingCount || 0} đánh giá
                                     </a>
                                 </div>
                             </div>
                         </div>
 
                         <div className="mt-10">
-                            <h2 className="text-sm font-medium text-gray-900">Description</h2>
+                            <h2 className="text-sm font-medium text-gray-900">Mô tả sản phẩm</h2>
                             <div
                                 className="prose prose-sm mt-4 text-gray-500"
                                 dangerouslySetInnerHTML={{ __html: product.description }}
@@ -223,13 +223,13 @@ export default function ShopProduct() {
                         </div>
 
                         <div>
-                            <h3 className="text-lg font-semibold mb-2">Select Size</h3>
+                            <h3 className="text-lg font-semibold mb-2">Lựa chọn thể loại</h3>
                             <RadioGroup
                                 value={selectedSize}
                                 onChange={setSelectedSize}
                                 className="mt-2"
                             >
-                                <RadioGroup.Label className="sr-only">Choose a size</RadioGroup.Label>
+                                <RadioGroup.Label className="sr-only">Chọn loại</RadioGroup.Label>
                                 <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
                                     {product.options.map((size) => (
                                         <RadioGroup.Option
@@ -253,7 +253,7 @@ export default function ShopProduct() {
 
                             <div className="mt-6 flex items-center justify-between">
                                 <div className="flex items-center space-x-4">
-                                    <span className="text-sm font-medium text-gray-900">Quantity:</span>
+                                    <span className="text-sm font-medium text-gray-900">Số lượng:</span>
                                     <div className="flex items-center border rounded">
                                         <button
                                             onClick={decreaseQuantity}
@@ -273,7 +273,7 @@ export default function ShopProduct() {
                                     </div>
                                 </div>
                                 <div>
-                                    <span className="text-sm font-medium">Total:</span>
+                                    <span className="text-sm font-medium">Tổng:</span>
                                     <p className="text-lg font-semibold">
                                         {new Intl.NumberFormat('vi-VN').format((selectedSize?.price || basePrice) * quantity)} VNĐ
                                     </p>
@@ -292,7 +292,7 @@ export default function ShopProduct() {
                                 )}
                             >
                                 <ShoppingCart className="w-5 h-5 mr-2" />
-                                {isAdding ? 'Adding...' : 'Add to Cart'}
+                                {isAdding ? 'Adding...' : 'Thêm vào giỏ hàng'}
                             </button>
                         </div>
 
@@ -309,19 +309,20 @@ export default function ShopProduct() {
                                 ))}
                             </div>
                         </div>
-                        <Policies />
+                        {/* <Policies /> */}
                     </div>
                 </div>
 
                 <div className="mt-12">
-                    <h2 className="text-2xl font-bold">Customer Reviews</h2>
-                    <div className="max-h-96 overflow-y-auto border-t mt-4">
+                    {/* <h2 className="text-2xl font-bold">Customer Reviews</h2> */}
+                    {/* <div className="max-h-96 overflow-y-auto border-t mt-4"> */}
                         <Reviews />
-                    </div>
+                        
+                    {/* </div> */}
                 </div>
 
                 <div className="mt-12">
-                    <h2 className="text-2xl font-bold">Related Products</h2>
+                    <h2 className="text-2xl font-bold">Sản phẩm tương tự</h2>
                     {productId && <RelatedProduct productId={productId} />}
                 </div>
             </main>

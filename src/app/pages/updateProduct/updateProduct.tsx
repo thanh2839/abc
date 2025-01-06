@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { getProductByID, Product, Category, Tag, fetchCategories, fetchTag, createTagAPI } from "./Type-update-Product";
+import { getProductByID, Product, Category, Tag, fetchCategories, fetchTag, createTagAPI, UpdateProduct, deleteProduct } from "./Type-update-Product";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Search } from 'lucide-react';
 import { ImagePlus } from 'lucide-react';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const cloudName = "dsymtu3j5";
 const uploadPreset = "shop_Santuary";
@@ -29,13 +30,15 @@ const GetupdateProduct = () => {
     const [filteredTags, setFilteredTags] = useState<Tag[]>([]);
     const [image, setImage] = useState<string | null>(null);
     const [productId, setProductId] = useState('');
-
+    const list: number[] = [];
     const [error, setError] = useState<string | null>(null);
 
     const [uploading, setUploading] = useState(false);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
 
     const [searchResults, setSearchResults] = useState(null);
+
+    const accessToken = sessionStorage.getItem('accessToken')
 
     useEffect(() => {
         const fetchData = async () => {
@@ -95,13 +98,20 @@ const GetupdateProduct = () => {
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         // handleUpload();
 
 
         e.preventDefault();
         // Handle form submission logic
         console.log('Product submitted:', product);
+        if (!accessToken) { return }
+        try {
+            const response = await UpdateProduct(Number(productId), accessToken)
+            console.log(response)
+        } catch (e) {
+            console.log(e)
+        }
     };
     // remove ProductOPtion
     const removeProductOption = (indexToRemove: number) => {
@@ -149,6 +159,22 @@ const GetupdateProduct = () => {
     };
 
     const handleDelete = async () => {
+        if (!accessToken) { return }
+        try {
+            const list: number[] = [];
+            list.push(Number(productId))
+            const response = await deleteProduct(accessToken, list)
+            console.log(response)
+            setSearchResults(null)
+            // if (response && response.success) {
+            //     toast.success("Xóa sản phẩm thành công!"); // Hiển thị thông báo thành công
+            // } else {
+            //     toast.error("Xóa sản phẩm thất bại!"); // Hiển thị thông báo lỗi nếu không thành công
+            // }
+        }
+        catch (e) {
+            console.log(e)
+        }
         // if (!window.confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) return;
 
         // try {

@@ -36,7 +36,7 @@ const sidebarSections: SidebarSection[] = [
     title: "My Orders",
     icon: <PackageOpen className="w-5 h-5" />,
     items: [
-      { label: "Đơn hàng của tôi", opacity: "50", icon: <PackageOpen className="w-4 h-4" /> },
+      { label: "Đơn hàng của tôi", icon: <PackageOpen className="w-4 h-4" /> },
       // { label: "My Cancellations", opacity: "50", icon: <XCircle className="w-4 h-4" /> }
     ]
   },
@@ -65,7 +65,7 @@ const adminSidebarSections: SidebarSection[] = [
     icon: <PackageOpen className="w-5 h-5" />,
     items: [
       { label: "Quản lý đơn hàng", icon: <PackageOpen className="w-4 h-4" /> },
-      { label: "Order Returns", icon: <PackageOpen className="w-4 h-4" /> }
+      // { label: "Order Returns", icon: <PackageOpen className="w-4 h-4" /> }
     ]
   }
 ];
@@ -73,12 +73,23 @@ const adminSidebarSections: SidebarSection[] = [
 export function ProfileLayout() {
   const role = sessionStorage.getItem('role');
   console.log(role);
-  const [activePage, setActivePage] = React.useState<string>("profile"); // State to track the active page
+  
+  const queryParams = new URLSearchParams(window.location.search);
+  const initialPage = queryParams.get("activePage") || "Thông tin của tôi";
 
-  // Function to handle the navigation of the sidebar
+  const [activePage, setActivePage] = React.useState<string>(initialPage);
+
   const handleNavigation = (page: string) => {
-    setActivePage(page); // Update the active page when a link is clicked
+    setActivePage(page);
+    // Cập nhật query parameter để giữ trạng thái khi reload
+    const url = new URL(window.location.href);
+    url.searchParams.set("activePage", page);
+    window.history.pushState({}, "", url.toString());
   };
+  
+  // const handleNavigation = (page: string) => {
+  //   setActivePage(page); 
+  // };
 
   const sections = role === 'ADMIN' ? adminSidebarSections : sidebarSections;
 
@@ -127,15 +138,14 @@ export function ProfileLayout() {
 
           <div className="flex-1">
             <div className="bg-white rounded-lg shadow-sm p-6">
-              {/* Conditionally render different components based on the active page */}
-              {activePage === "My Profile" && <ProfileForm />}
+              {activePage === "Thông tin của tôi" && <ProfileForm />}
               {/* {activePage === "Manage Profile" && <ManageProfile />} */}
               {/* {activePage === "Employees" && <ManageProfile />}  */}
               {activePage === "Thêm sản phẩm" && <AddProductForm />}
               {activePage === "Sửa sản phẩm" && <GetupdateProduct />}
               {activePage === "Quản lý đơn hàng" && <AdminOrderManagement />}
               {activePage === "Order Returns" && <AdminOrderManagementACopy />}
-              {activePage === "My Returns" && <MyOrder />}
+              {activePage === "Đơn hàng của tôi" && <MyOrder />}
               {activePage === "My Cancellations" && <AdminOrderManagementACopy />}
             </div>
           </div>

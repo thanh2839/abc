@@ -201,6 +201,7 @@ export const fetchGetAllShipping = async (accessToken: string) => {
 }
 
 export const addShippingMethod = async (accessToken: string, body: { name: string, cost: number, estimatedShipping: number, isInner: boolean }) => {
+    console.log("Shipping: ", body)
     try {
         const response = await fetch(ApiRoutes.addShippingMethod, {
             method: 'POST',
@@ -222,9 +223,10 @@ export const addShippingMethod = async (accessToken: string, body: { name: strin
     }
 }
 
-export const addPaymentMethod = async (accessToken: string, body: string) => {
+export const addPaymentMethod = async (accessToken: string, body: string []) => {
+    console.log("Payemnet: ", body)
     try {
-        const response = await fetch(ApiRoutes.addShippingMethod, {
+        const response = await fetch(ApiRoutes.addPaymentMethod, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

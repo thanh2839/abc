@@ -141,8 +141,10 @@ const Page = () => {
     }
     catch (error) {
       console.error('Error during registration:', error);
-
     }
+  };
+  const switchToLogin = () => {
+    setIsRegister(true); // Chuyển sang form đăng nhập
   };
 
   return (
@@ -153,25 +155,25 @@ const Page = () => {
           className={`bg-white shadow-lg rounded-lg p-8 ${isRegister ? 'w-[800px]' : 'w-96'
             } transition-all duration-300`}
         >
-          <h1 className="text-2xl font-bold text-center mb-4">Welcome to Sentuary.com</h1>
+          <h1 className="text-2xl font-bold text-center mb-4">Chào mứng tới Sentuary.com</h1>
 
           <div className="flex justify-between mb-6">
             <button
               onClick={() => setIsRegister(false)} // Hiển thị form đăng nhập
               className={`text-gray-700 pb-1 ${!isRegister ? 'font-bold border-b-2 border-blue-500' : 'font-normal'}`}
             >
-              Sign in
+              Đăng nhập
             </button>
             <button
               onClick={() => setIsRegister(true)} // Hiển thị form đăng ký
               className={`text-gray-700 pb-1 ${isRegister ? 'font-bold border-b-2 border-blue-500' : 'font-normal'}`}
             >
-              Register
+              Đăng ký
             </button>
           </div>
 
           {isRegister ? (
-            <RegisterForm onSubmit={handleRegister} passwordError={passwordError} setPasswordError={setPasswordError} />
+            <RegisterForm onSubmit={handleRegister} onSwitchToLogin={switchToLogin} passwordError={passwordError} setPasswordError={setPasswordError} />
           ) : (
             <LoginForm onSubmit={handleLogin} />
           )}

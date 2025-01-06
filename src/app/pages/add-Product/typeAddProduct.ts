@@ -69,12 +69,12 @@ export const fetchTag = async(): Promise<Tag[]> => {
 }
 
 
-export const createProduct = async (product: Product): Promise<void> => {
+export const createProduct = async (product: Product, accessToken: string): Promise<void> => {
   const response = await fetch (ApiRoutes.Product_create, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      // "Authorization": `Bearer ${token}`
+      "Authorization": `Bearer ${accessToken}`
     },
     body: JSON.stringify(product),
   });

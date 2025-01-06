@@ -20,21 +20,21 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
 
     <form onSubmit={(e) => e.preventDefault()}>
       <div className="mb-4">
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Tên đăng nhập</label>
         <input
           type="email"
           id="email"
           value={username}
           onChange={(e) => setUserName(e.target.value)}
           className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Email Address"
+          placeholder="Tên đăng nhập"
         />
       </div>
 
       <div className="mb-4 relative">
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Mật khẩu</label>
         <input
-          type={showPassword ? 'text' : 'password'}
+          type={showPassword ? 'text' : 'Mật khẩu'}
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -50,7 +50,7 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
       </div>
 
       <div className="flex items-center justify-between mb-6">
-        <label className="flex items-center">
+        {/* <label className="flex items-center">
           <input
             type="checkbox"
             checked={rememberMe}
@@ -58,8 +58,8 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
             className="mr-2"
           />
           Remember password
-        </label>
-        <button className="text-blue-500 text-sm font-medium">Forgot password?</button>
+        </label> */}
+        <button className="text-blue-500 text-sm font-medium">Quên mật khẩu?</button>
       </div>
 
       <button
@@ -67,7 +67,7 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
         onClick={handleSubmit}
         className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
       >
-        Log in
+        Đăng nhập
       </button>
     </form>
   );

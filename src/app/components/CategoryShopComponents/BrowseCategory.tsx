@@ -80,14 +80,14 @@ export const BrowseCategories: React.FC = () => {
                                 <div className="flex shrink-0 h-10 bg-red-500 rounded" />
                             </div>
                             <div className="self-stretch my-auto text-base font-semibold leading-none text-red-500">
-                                Categories
+                                Danh mục
                             </div>
                         </div>
                         <h2
                             id="browse-categories-title"
                             className="mt-5 text-4xl font-semibold tracking-widest leading-none text-black"
                         >
-                            Browse By Category
+                            Xem danh mục
                         </h2>
                     </div>
                 </div>
@@ -118,11 +118,12 @@ export const BrowseCategories: React.FC = () => {
                 <div className="mt-12 flex justify-center">
                     <button
                         onClick={() => {
+                            window.location.href = '/pages/sellProduct'
                         }}
                         className="px-8 py-4 bg-red-500 text-white text-lg font-medium rounded-lg shadow-lg hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300"
                         aria-label="View all products"
                     >
-                        View All Products
+                        Xem tất cả sản phẩm
                     </button>
                 </div>
             </div>

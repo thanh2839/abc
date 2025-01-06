@@ -157,7 +157,7 @@ export function ProfileForm() {
                             />
                         </div>
                         <Button variant="outline" className="h-10" onClick={handleClick}>
-                            Change Photo
+                            Thay avatar
                         </Button>
                         <input
                             id="avatarInput"
@@ -170,7 +170,7 @@ export function ProfileForm() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2 md:col-span-2">
-                            <Label htmlFor="fullname">Full Name</Label>
+                            <Label htmlFor="fullname">Tên</Label>
                             <Input
                                 id="fullname"
                                 name="fullname"
@@ -192,7 +192,7 @@ export function ProfileForm() {
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="gender">Gender</Label>
+                            <Label htmlFor="gender">Giới tính</Label>
                             <Select
                                 value={formData.gender}
                                 onValueChange={(value: string) => setFormData(prev => ({ ...prev, gender: value }))}
@@ -201,15 +201,15 @@ export function ProfileForm() {
                                     <SelectValue placeholder="Select gender" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="Female">Female</SelectItem>
-                                    <SelectItem value="male">Male</SelectItem>
+                                    <SelectItem value="Female">Nữ</SelectItem>
+                                    <SelectItem value="male">Nam</SelectItem>
                                     <SelectItem value="other">Other</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="dateOfBirth">Date of Birth</Label>
+                            <Label htmlFor="dateOfBirth">Ngày sinh</Label>
                             <div className="relative">
                                 <Input
                                     id="dateOfBirth"
@@ -225,7 +225,7 @@ export function ProfileForm() {
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="bio">Bio</Label>
+                        <Label htmlFor="bio">Giới thiệu</Label>
                         <Textarea
                             id="bio"
                             name="bio"
@@ -290,10 +290,10 @@ export function ProfileForm() {
 
                     <div className="flex justify-end space-x-4">
                         <Button variant="ghost" type="button">
-                            Cancel
+                            Hủy
                         </Button>
                         <Button type="submit" className="bg-red-500 hover:bg-red-600">
-                            Save Changes
+                            Lưu
                         </Button>
                     </div>
                 </form>

@@ -208,7 +208,7 @@ export default function ProductsPage() {
                     <div className="space-y-6 sticky top-4">
                         {/* Categories */}
                         <div className="bg-white p-4 rounded-lg shadow-sm border">
-                            <h3 className="font-semibold mb-4">Categories</h3>
+                            <h3 className="font-semibold mb-4">Danh mục</h3>
                             <div className="space-y-3">
                                 {category.map((category) => (
                                     <label key={category.id} className="flex items-center gap-3 cursor-pointer group">
@@ -283,7 +283,7 @@ export default function ProductsPage() {
 
                         {/* Price Range */}
                         <div className="bg-white p-4 rounded-lg shadow-sm border">
-                            <h3 className="font-semibold mb-4">Price Range</h3>
+                            <h3 className="font-semibold mb-4">Khoảng giá</h3>
                             <div className="px-2">
                                 <Slider
                                     min={0}
@@ -303,7 +303,7 @@ export default function ProductsPage() {
                         {/* In Stock Filter */}
                         <div className="bg-white p-4 rounded-lg shadow-sm border">
                             <div className="flex items-center justify-between">
-                                <h3 className="font-semibold">In Stock Only</h3>
+                                <h3 className="font-semibold">Còn hàng</h3>
                                 <Switch
                                     checked={inStockOnly}
                                     onChange={toggleInStock}
@@ -319,7 +319,7 @@ export default function ProductsPage() {
                         {/* Submit Button */}
                         <div className="text-center">
                             <Button onClick={handleSubmit} className="w-full bg-black text-white hover:bg-gray-800">
-                                Apply Filters
+                                Lọc
                             </Button>
                         </div>
                     </div>

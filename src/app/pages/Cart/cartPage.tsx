@@ -138,7 +138,7 @@ const CartPage: React.FC = () => {
 
   const handleDeleteItem = (id: string) => {
     setCartItems(items => items.filter(item => item.id !== id));
-    console.log("AAA: ", id);
+    console.log("AAAbd Item: ", id);
     if (idUser && accessToken) {
       deleteItem(Number(idUser), accessToken, Number(id)).then(() => {
         console.log("Item successfully deleted from the server:", id);
@@ -179,12 +179,12 @@ const CartPage: React.FC = () => {
       <Card className="mb-8">
         <CardHeader className="flex justify-between p-4 border-b">
           <div className="grid grid-cols-12 w-full">
-            <div className="col-span-5">Product</div>
+            <div className="col-span-5">Sản phẩm</div>
             <div className="col-span-7 grid grid-cols-4">
-              <span>Price</span>
-              <span>Quantity</span>
-              <span className="text-right">Subtotal</span>
-              <span className="text-right">Action</span>
+              <span>Giá</span>
+              <span>Số lượng</span>
+              <span className="text-right">Tổng giá</span>
+              <span className="text-right">Xóa</span>
             </div>
           </div>
         </CardHeader>
@@ -203,12 +203,12 @@ const CartPage: React.FC = () => {
 
       <div className="flex justify-between flex-wrap gap-8">
         <div className="flex gap-4">
-          <Button variant="outline" className="whitespace-nowrap">
+          {/* <Button variant="outline" className="whitespace-nowrap">
             Return To Shop
-          </Button>
-          <Button variant="outline" className="whitespace-nowrap">
-            Update Cart
-          </Button>
+          </Button> */}
+          {/* <Button variant="outline" className="whitespace-nowrap">
+            Xóa giỏ hàng
+          </Button> */}
         </div>
 
         {/* <div className="flex gap-4">
@@ -226,7 +226,7 @@ const CartPage: React.FC = () => {
 
       <Card className="mt-8 max-w-md ml-auto">
         <CardHeader>
-          <h2 className="text-xl font-semibold">Cart Total</h2>
+          <h2 className="text-xl font-semibold">Tổng tiền</h2>
         </CardHeader>
 
         <CardContent className="space-y-4">
@@ -241,7 +241,7 @@ const CartPage: React.FC = () => {
             className="w-full mt-4"
             onClick={handleCheckout}
           >
-            Proceed to Checkout
+            Thanh toán
           </Button>
 
         </CardContent>
