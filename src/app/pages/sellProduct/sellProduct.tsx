@@ -189,7 +189,7 @@ export default function ProductsPage() {
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="flex justify-between items-center mb-8">
-                <h1 className="text-2xl font-semibold">Filter</h1>
+                <h1 className="text-2xl font-semibold"></h1>
                 <div className="flex items-center gap-4">
                     {/* Cập nhật giá trị của input */}
                     <Input
