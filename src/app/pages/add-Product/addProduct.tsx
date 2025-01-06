@@ -7,8 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Product, Category, Tag, fetchCategories, fetchTag, createTagAPI, createProduct } from './typeAddProduct';
-import { access } from 'fs';
-
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const AddProductForm = () => {
   const [product, setProduct] = useState<Product>({
@@ -23,6 +22,8 @@ const AddProductForm = () => {
   const [tag, setTag] = useState<Tag[]>([]);
   const [image, setImage] = useState<string | null>(null);
   const accessToken = sessionStorage.getItem('accessToken')
+  const [showSuccess, setShowSuccess] = useState(false);
+
 
 
   //search tag
@@ -127,7 +128,13 @@ const AddProductForm = () => {
     try {
       const response = await createProduct(product, accessToken)
       console.log(response)
-    }catch (e) {
+      setShowSuccess(true);
+
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 3000);
+
+    } catch (e) {
       console.log(e)
     }
   };
@@ -407,6 +414,16 @@ const AddProductForm = () => {
               </Button>
             </div>
           </form>
+          {showSuccess && (
+            <div className="fixed top-4 right-4 z-50 animate-in fade-in slide-in-from-top-5">
+              <Alert className="bg-green-100 border-green-500">
+                <AlertTitle className="text-green-800">Success!</AlertTitle>
+                <AlertDescription className="text-green-700">
+                  Product has been created successfully.
+                </AlertDescription>
+              </Alert>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

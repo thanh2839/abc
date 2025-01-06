@@ -10,6 +10,9 @@ import { Search } from 'lucide-react';
 import { ImagePlus } from 'lucide-react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
+
 
 const cloudName = "dsymtu3j5";
 const uploadPreset = "shop_Santuary";
@@ -32,6 +35,8 @@ const GetupdateProduct = () => {
     const [productId, setProductId] = useState('');
     const list: number[] = [];
     const [error, setError] = useState<string | null>(null);
+
+    const [showSuccess, setShowSuccess] = useState(false);
 
     const [uploading, setUploading] = useState(false);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -109,6 +114,13 @@ const GetupdateProduct = () => {
         try {
             const response = await UpdateProduct(Number(productId), accessToken)
             console.log(response)
+            // popup
+            setShowSuccess(true);
+
+            setTimeout(() => {
+                setShowSuccess(false);
+            }, 3000);
+
         } catch (e) {
             console.log(e)
         }
@@ -486,6 +498,16 @@ const GetupdateProduct = () => {
                                 </Button>
                             </div>
                         </form>
+                    )}
+                    {showSuccess && (
+                        <div className="fixed top-4 right-4 z-50 animate-in fade-in slide-in-from-top-5">
+                            <Alert className="bg-green-100 border-green-500">
+                                <AlertTitle className="text-green-800">Success!</AlertTitle>
+                                <AlertDescription className="text-green-700">
+                                    Product has been created successfully.
+                                </AlertDescription>
+                            </Alert>
+                        </div>
                     )}
                 </div>
             </CardContent>
