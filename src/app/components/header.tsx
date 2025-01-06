@@ -114,14 +114,14 @@ const Header = () => {
                         Settings
                       </a>
                     </li>
-                    <li>
+                    {/* <li>
                       <a
                         href="/pages/add-Product"
                         className="block px-4 py-2.5 text-sm text-gray-800 hover:bg-gray-100 transition-colors duration-200"
                       >
                         Add product
                       </a>
-                    </li>
+                    </li> */}
                     <li>
                       <a
                         href="/logout"
