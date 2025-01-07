@@ -44,7 +44,7 @@ const Header = () => {
           setNotifications(data.data);
         }
       } catch (error) {
-        console.error('Error fetching notifications:', error);
+        console.log('Error fetching notifications:', error);
       }
     };
 

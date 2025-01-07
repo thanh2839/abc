@@ -34,7 +34,7 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
       <div className="mb-4 relative">
         <label htmlFor="password" className="block text-sm font-medium text-gray-700">Mật khẩu</label>
         <input
-          type={showPassword ? 'text' : 'Mật khẩu'}
+          type={showPassword ? 'text' : 'password'}
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
