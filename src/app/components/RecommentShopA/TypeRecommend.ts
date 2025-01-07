@@ -1,15 +1,15 @@
 import ApiRoutes from "@/app/services/Api";
 
 
-export const fetchGetHybrid = async (id : string) => {
+export const fetchGetHybrid = async (idMember : number) => {
     try {
-        const response = await fetch('http://127.0.0.1:8000/hybrid/member/recommend', {
+        const response = await fetch('http://127.0.0.1:8000/collaborative/member/recommend', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "id": id,
+                "id": idMember,
                 "top_n": 20
             })
         })
@@ -17,7 +17,7 @@ export const fetchGetHybrid = async (id : string) => {
             throw Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json()
-        // console.log("data top Selling: ", data)
+        console.log("data top collaborative: ", data)
         return data;
     } catch (e) {
         console.error('Error fetching category products:', e);

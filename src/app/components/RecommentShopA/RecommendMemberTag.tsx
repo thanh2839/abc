@@ -41,7 +41,7 @@ export function RecommentHybridSection() {
     const bestSelling = async () => {
         if (!idMember) return;
         try {
-            const data = await fetchGetHybrid(idMember)
+            const data = await fetchGetHybrid(Number(idMember))
             const productIds = data.map(item => item.productId);
             console.log("Product IDs: ", productIds);
 
@@ -67,9 +67,10 @@ export function RecommentHybridSection() {
     React.useEffect(() => {
         bestSelling();
     }, []);
+    console.log("test: ", products)
 
-    if (!idMember || !accessToken) {
-        return null;  // This will hide the section if no idMember or accessToken
+    if (!idMember || !accessToken || (Array.isArray(products) && products.length === 0)) {
+        return null;  
     }
 
     return (
@@ -85,7 +86,7 @@ export function RecommentHybridSection() {
                             id="flash-sales-title"
                             className="text-4xl font-semibold tracking-widest leading-none text-black"
                         >
-                            SẢN PHẨM GỢI Ý
+                            SẢN PHẨM GỢI Ý CHO BẠN
                         </h1>
                         {/* Move Next Button next to Flash Sales */}
                         <div className="flex gap-2 items-center">

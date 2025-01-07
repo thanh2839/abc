@@ -13,6 +13,7 @@ export interface ProductCardProps {
 }
 
 export function ProductCard({
+    id,
     image,
     title,
     currentPrice,
@@ -23,11 +24,17 @@ export function ProductCard({
 }: ProductCardProps) {
     const [isHovered, setIsHovered] = React.useState(false);
 
+            // Navigate function
+            const handleNavigate = (id: string) => {
+                window.location.href = `/pages/products?id=${id}`; 
+            };
+
     return (
         <article
             className="flex flex-col min-w-[240px] w-[270px] transition-transform duration-300 ease-in-out transform hover:-translate-y-2"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onClick={() => handleNavigate(id.toString())}  
         >
             <div className="flex overflow-hidden gap-1 items-start px-3 pt-3 pb-12 max-w-full rounded bg-neutral-100 w-[270px] relative">
                 <div className="flex flex-col text-xs whitespace-nowrap text-neutral-50">

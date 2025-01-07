@@ -3,7 +3,7 @@ import { Footer } from '../../components/Footer';
 // import { HeroSection } from './HeroSection';
 import { AboutFeature } from '../../components/About us/AboutFeature';
 import { MainHero } from '@/app/components/heroSection/heroSection';
-import { RecommentHybridSection } from '@/app/components/RecommentShop/RecommendHybridSection';
+import { RecommentHybridSection } from '@/app/components/RecommentShopA/RecommendMemberTag';
 import { BestSellingProductComponents } from '@/app/components/BestSelling/BestSelling';
 import { BrowseCategories } from '@/app/components/CategoryShopComponents/BrowseCategory';
 import { TopNewProductComponents } from '@/app/components/TopNewProduct/topNewProduct';

@@ -17,7 +17,7 @@ export const fetchGetHybrid = async (idMember : number) => {
             throw Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json()
-        // console.log("data top Selling: ", data)
+        console.log("data top collaborative: ", data)
         return data;
     } catch (e) {
         console.error('Error fetching category products:', e);
